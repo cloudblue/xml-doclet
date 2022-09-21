@@ -8,10 +8,11 @@ import com.automation.xmldoclet.xjc.AnnotationElement;
 import com.automation.xmldoclet.xjc.AnnotationInstance;
 import com.automation.xmldoclet.xjc.Package;
 import com.automation.xmldoclet.xjc.Root;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit test group for Annotations
@@ -19,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 @SuppressWarnings("deprecation")
 public class AnnotationTest extends AbstractTestParent {
     /**
-     * Rigourous Parser :-)
+     * Rigorous Parser :-)
      */
     @Test
     public void testSampledoc() {
@@ -39,7 +40,7 @@ public class AnnotationTest extends AbstractTestParent {
         Annotation annotationNode = packageNode.getAnnotation().get(0);
 
         assertEquals(rootNode.getPackage().size(), 1);
-        assertEquals(packageNode.getComment(), null);
+        assertNull(packageNode.getComment());
         assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 1);
         assertEquals(packageNode.getEnum().size(), 0);
@@ -68,7 +69,7 @@ public class AnnotationTest extends AbstractTestParent {
         AnnotationInstance annotationInstance = annotationNode.getAnnotation().get(0);
 
         assertEquals(rootNode.getPackage().size(), 1);
-        assertEquals(packageNode.getComment(), null);
+        assertNull(packageNode.getComment());
         assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 1);
         assertEquals(packageNode.getEnum().size(), 0);
@@ -102,7 +103,7 @@ public class AnnotationTest extends AbstractTestParent {
         AnnotationElement element = annotationNode.getElement().get(0);
 
         assertEquals(rootNode.getPackage().size(), 1);
-        assertEquals(packageNode.getComment(), null);
+        assertNull(packageNode.getComment());
         assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 1);
         assertEquals(packageNode.getEnum().size(), 0);
@@ -136,7 +137,7 @@ public class AnnotationTest extends AbstractTestParent {
         Annotation annotationNode = packageNode.getAnnotation().get(0);
 
         assertEquals(rootNode.getPackage().size(), 1);
-        assertEquals(packageNode.getComment(), null);
+        assertNull(packageNode.getComment());
         assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 1);
         assertEquals(packageNode.getEnum().size(), 0);

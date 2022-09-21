@@ -4,14 +4,15 @@ import com.automation.xmldoclet.simpledata.Tag1;
 import com.automation.xmldoclet.xjc.Class;
 import com.automation.xmldoclet.xjc.Package;
 import com.automation.xmldoclet.xjc.Root;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Unit test group for Tags
  */
+@SuppressWarnings("deprecation")
 public class TagTest extends AbstractTestParent {
 
     /**

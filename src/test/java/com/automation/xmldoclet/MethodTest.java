@@ -13,16 +13,16 @@ import com.automation.xmldoclet.xjc.Package;
 import com.automation.xmldoclet.xjc.Root;
 import com.automation.xmldoclet.xjc.TypeInfo;
 import com.automation.xmldoclet.xjc.Wildcard;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Unit test group for Methods
@@ -30,7 +30,7 @@ import static org.junit.Assert.fail;
 public class MethodTest extends AbstractTestParent {
 
     /**
-     * Rigourous Parser :-)
+     * Rigorous Parser :-)
      */
     @Test
     public void testSampledoc() {
@@ -173,13 +173,13 @@ public class MethodTest extends AbstractTestParent {
         methodParameterNode = methodNode.getParameter().get(0);
         assertEquals(methodParameterNode.getName(), "arg1");
         assertEquals(methodParameterNode.getType().getQualified(), "java.util.ArrayList");
-        assertEquals(methodParameterNode.getType().getDimension(), null);
+        assertNull(methodParameterNode.getType().getDimension());
         assertEquals(methodParameterNode.getType().getGeneric().size(), 1);
         assertNull(methodParameterNode.getType().getWildcard());
 
         type = methodParameterNode.getType().getGeneric().get(0);
         assertEquals(type.getQualified(), "?");
-        assertEquals(type.getDimension(), null);
+        assertNull(type.getDimension());
         assertEquals(type.getGeneric().size(), 0);
         assertNotNull(type.getWildcard());
 
@@ -189,7 +189,7 @@ public class MethodTest extends AbstractTestParent {
 
         TypeInfo extendsBound = wildcard.getExtendsBound().get(0);
         assertEquals(extendsBound.getQualified(), "java.lang.String");
-        assertEquals(extendsBound.getDimension(), null);
+        assertNull(extendsBound.getDimension());
         assertEquals(extendsBound.getGeneric().size(), 0);
         assertNull(extendsBound.getWildcard());
 
@@ -202,13 +202,13 @@ public class MethodTest extends AbstractTestParent {
         methodParameterNode = methodNode.getParameter().get(0);
         assertEquals(methodParameterNode.getName(), "arg1");
         assertEquals(methodParameterNode.getType().getQualified(), "java.util.ArrayList");
-        assertEquals(methodParameterNode.getType().getDimension(), null);
+        assertNull(methodParameterNode.getType().getDimension());
         assertEquals(methodParameterNode.getType().getGeneric().size(), 1);
         assertNull(methodParameterNode.getType().getWildcard());
 
         type = methodParameterNode.getType().getGeneric().get(0);
         assertEquals(type.getQualified(), "?");
-        assertEquals(type.getDimension(), null);
+        assertNull(type.getDimension());
         assertEquals(type.getGeneric().size(), 0);
         assertNotNull(type.getWildcard());
 
@@ -218,7 +218,7 @@ public class MethodTest extends AbstractTestParent {
 
         TypeInfo superBounds = wildcard.getSuperBound().get(0);
         assertEquals(superBounds.getQualified(), "java.lang.String");
-        assertEquals(superBounds.getDimension(), null);
+        assertNull(superBounds.getDimension());
         assertEquals(superBounds.getGeneric().size(), 0);
         assertNull(superBounds.getWildcard());
 
@@ -230,19 +230,19 @@ public class MethodTest extends AbstractTestParent {
         methodParameterNode = methodNode.getParameter().get(0);
         assertEquals(methodParameterNode.getName(), "arg1");
         assertEquals(methodParameterNode.getType().getQualified(), "java.util.ArrayList");
-        assertEquals(methodParameterNode.getType().getDimension(), null);
+        assertNull(methodParameterNode.getType().getDimension());
         assertEquals(methodParameterNode.getType().getGeneric().size(), 1);
         assertNull(methodParameterNode.getType().getWildcard());
 
         type = methodParameterNode.getType().getGeneric().get(0);
         assertEquals(type.getQualified(), "java.util.ArrayList");
-        assertEquals(type.getDimension(), null);
+        assertNull(type.getDimension());
         assertEquals(type.getGeneric().size(), 1);
         assertNull(type.getWildcard());
 
         type = type.getGeneric().get(0);
         assertEquals(type.getQualified(), "java.lang.String");
-        assertEquals(type.getDimension(), null);
+        assertNull(type.getDimension());
         assertEquals(type.getGeneric().size(), 0);
         assertNull(type.getWildcard());
 
@@ -319,7 +319,7 @@ public class MethodTest extends AbstractTestParent {
 
         TypeInfo exception = methodNode.getException().get(0);
         assertEquals(exception.getQualified(), "java.lang.Exception");
-        assertEquals(exception.getDimension(), null);
+        assertNull(exception.getDimension());
         assertEquals(exception.getGeneric().size(), 0);
         assertNull(exception.getWildcard());
 
@@ -329,12 +329,12 @@ public class MethodTest extends AbstractTestParent {
 
         exception = methodNode.getException().get(0);
         assertEquals(exception.getQualified(), "java.lang.OutOfMemoryError");
-        assertEquals(exception.getDimension(), null);
+        assertNull(exception.getDimension());
         assertEquals(exception.getGeneric().size(), 0);
 
         exception = methodNode.getException().get(1);
         assertEquals(exception.getQualified(), "java.lang.IllegalArgumentException");
-        assertEquals(exception.getDimension(), null);
+        assertNull(exception.getDimension());
         assertEquals(exception.getGeneric().size(), 0);
 
         // negative--no exceptions
@@ -372,7 +372,7 @@ public class MethodTest extends AbstractTestParent {
      * Short way of finding methodNodes. It's meant to only be used for
      * methodNodes that do not share the same name in the same class. In fact,
      * this class will junit assert that there is only 1 methodNode matching
-     * this name in the supplied <code>list</code> methodParameterNodeeter.
+     * this name in the supplied <code>list</code> methodNodes.
      *
      * @param methodNodeName
      *            the shortname of the methodNode
@@ -388,6 +388,6 @@ public class MethodTest extends AbstractTestParent {
         }
 
         fail();
-        return null;
+        return new Method();
     }
 }

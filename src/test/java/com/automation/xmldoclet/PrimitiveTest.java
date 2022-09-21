@@ -1,6 +1,6 @@
 package com.automation.xmldoclet;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test group for Primitives
@@ -8,7 +8,7 @@ import org.junit.Test;
 public class PrimitiveTest extends AbstractTestParent {
 
     /**
-     * Rigourous Parser :-)
+     * Rigorous Parser :-)
      */
     @Test
     public void test() {

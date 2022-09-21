@@ -35,12 +35,12 @@ import com.automation.xmldoclet.xjc.Package;
 import com.automation.xmldoclet.xjc.Root;
 import com.automation.xmldoclet.xjc.TypeInfo;
 import com.automation.xmldoclet.xjc.TypeParameter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit test group for Classes
@@ -62,7 +62,7 @@ public class ClassTest extends AbstractTestParent {
         Class classNode = packageNode.getClazz().get(0);
 
         assertEquals(rootNode.getPackage().size(), 1);
-        assertEquals(packageNode.getComment(), null);
+        assertNull(packageNode.getComment());
         assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getClazz().size(), 1);
         assertEquals(packageNode.getEnum().size(), 0);
@@ -124,7 +124,7 @@ public class ClassTest extends AbstractTestParent {
 
 
     /**
-     * Rigourous Parser :-)
+     * Rigorous Parser :-)
      */
     @Test
     public void testSampledoc() {
@@ -905,7 +905,7 @@ public class ClassTest extends AbstractTestParent {
         AnnotationArgument argument = instance.getArgument().get(0);
         assertEquals(argument.getType().getQualified(), "char");
         assertEquals(argument.getValue().size(), 1);
-        assertEquals(argument.getValue().get(0), Integer.toString((int) 'a'));
+        assertEquals(argument.getValue().get(0), Integer.toString('a'));
         assertTrue(argument.isPrimitive());
         assertFalse(argument.isArray());
     }

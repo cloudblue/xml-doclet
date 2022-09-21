@@ -4,9 +4,9 @@ import com.automation.xmldoclet.simpledata.AnnotatedParameter;
 import com.automation.xmldoclet.xjc.Method;
 import com.automation.xmldoclet.xjc.Root;
 import com.automation.xmldoclet.xjc.TypeInfo;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AnnotatedParameterTest extends AbstractTestParent {
 

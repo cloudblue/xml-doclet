@@ -15,7 +15,7 @@
 		<java.version>11</java.version>
 		<jaxb.version>2.3.6</jaxb.version>
 		<activation.version>1.2.2</activation.version>
-		<junit.version>4.13.2</junit.version>
+		<junit.jupiter.version>5.9.0</junit.jupiter.version>
 	</properties>
 
 	<organization>
@@ -50,9 +50,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>${junit.jupiter.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

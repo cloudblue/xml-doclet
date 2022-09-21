@@ -13,12 +13,12 @@ import com.automation.xmldoclet.xjc.Method;
 import com.automation.xmldoclet.xjc.Package;
 import com.automation.xmldoclet.xjc.Root;
 import com.automation.xmldoclet.xjc.TypeParameter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit test group for Interfaces
@@ -27,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 public class InterfaceTest extends AbstractTestParent {
 
     /**
-     * Rigourous Parser :-)
+     * Rigorous Parser :-)
      */
     @Test
     public void testSampledoc() {
@@ -36,7 +36,7 @@ public class InterfaceTest extends AbstractTestParent {
     }
 
     /**
-     * testing a interface with nothing defined
+     * testing an interface with nothing defined
      */
     @Test
     public void testInterface1() {
@@ -65,7 +65,7 @@ public class InterfaceTest extends AbstractTestParent {
     }
 
     /**
-     * testing a interface with 1 method
+     * testing an interface with 1 method
      */
     @Test
     public void testInterface2() {
@@ -111,7 +111,7 @@ public class InterfaceTest extends AbstractTestParent {
     }
 
     /**
-     * testing a interface that extends another interface
+     * testing an interface that extends another interface
      */
     @Test
     public void testInterface3() {
@@ -143,7 +143,7 @@ public class InterfaceTest extends AbstractTestParent {
     }
 
     /**
-     * testing a interface that implements one annotation
+     * testing an interface that implements one annotation
      */
     @Test
     public void testInterface4() {
@@ -179,7 +179,7 @@ public class InterfaceTest extends AbstractTestParent {
     }
 
     /**
-     * testing a interface that is abstract
+     * testing an interface that is abstract
      */
     @Test
     public void testInterface5() {
@@ -226,7 +226,7 @@ public class InterfaceTest extends AbstractTestParent {
     }
 
     /**
-     * testing a interface that has a type variable
+     * testing an interface that has a type variable
      */
     @Test
     public void testInterface6() {
@@ -259,7 +259,7 @@ public class InterfaceTest extends AbstractTestParent {
     }
 
     /**
-     * testing a interface that has a type variable with extends
+     * testing an interface that has a type variable with extends
      */
     @Test
     public void testInterface7() {
@@ -292,7 +292,7 @@ public class InterfaceTest extends AbstractTestParent {
     }
 
     /**
-     * testing a interface that has a type variable with extends of a class and
+     * testing an interface that has a type variable with extends of a class and
      * interface
      */
     @Test

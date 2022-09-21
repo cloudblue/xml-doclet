@@ -8,16 +8,16 @@ import com.automation.xmldoclet.xjc.Class;
 import com.automation.xmldoclet.xjc.Field;
 import com.automation.xmldoclet.xjc.Package;
 import com.automation.xmldoclet.xjc.Root;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Unit test group for Fields
@@ -25,7 +25,7 @@ import static org.junit.Assert.fail;
 public class FieldTest extends AbstractTestParent {
 
     /**
-     * Rigourous Parser :-)
+     * Rigorous Parser :-)
      */
     @Test
     public void testSampledoc() {
@@ -185,6 +185,6 @@ public class FieldTest extends AbstractTestParent {
         }
 
         fail();
-        return null;
+        return new Field();
     }
 }
