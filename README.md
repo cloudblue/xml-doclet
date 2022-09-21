@@ -8,33 +8,31 @@ Usage
 
 If you are using maven you can use this library by adding the following report to your pom.xml:
 
-    <project>
-    	...
-    			<plugin>
-    				<groupId>org.apache.maven.plugins</groupId>
-    				<artifactId>maven-javadoc-plugin</artifactId>
-    				<executions>
-    					<execution>
-    						<id>xml-doclet</id>
-						<phase>prepare-package</phase>
-    						<goals>
-    							<goal>javadoc</goal>
-    						</goals>
-    						<configuration>
-    							<doclet>com.automation.xmldoclet.XmlDoclet</doclet>
-    							<additionalparam>-d ${project.build.directory} -filename ${project.artifactId}-${project.version}-javadoc.xml</additionalparam>
-    							<useStandardDocletOptions>false</useStandardDocletOptions>
-    							<docletArtifact>
-    								<groupId>com.automation</groupId>
-    								<artifactId>xml-doclet</artifactId>
-    								<version>2.0.0</version>
-    							</docletArtifact>
-    						</configuration>
-						</execution>
-    				</executions>
-    			</plugin>
-    	...
-    </project>
+```
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-javadoc-plugin</artifactId>
+    <executions>
+        <execution>
+            <id>xml-doclet</id>
+            <phase>prepare-package</phase>
+            <goals>
+                <goal>javadoc</goal>
+            </goals>
+            <configuration>
+                <doclet>com.automation.xmldoclet.XmlDoclet</doclet>
+                <additionalparam>-d ${project.build.directory} -filename ${project.artifactId}-${project.version}-javadoc.xml</additionalparam>
+                <useStandardDocletOptions>false</useStandardDocletOptions>
+                <docletArtifact>
+                    <groupId>com.automation</groupId>
+                    <artifactId>xml-doclet</artifactId>
+                    <version>2.0.0</version>
+                </docletArtifact>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+```
     
 Use 'mvn package' with maven.
 If you are not using maven, you can use the [jar-with-dependencies](), which contains all required libraries.

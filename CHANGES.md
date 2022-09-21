@@ -4,6 +4,9 @@ CHANGES
 2.0.0
 ----------
 * Reimplemented to use the new Javadoc API (Java 11+ support). Thanks to vojtechhabarta!
+* Known side effect:  
+  Parameterized types does not include the space between type arguments anymore.  
+  This means Map<String, String> becomes Map<String,String>.  
 
 1.0.5
 -----
