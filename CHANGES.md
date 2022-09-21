@@ -1,8 +1,9 @@
 CHANGES
 =======
 
-unreleased
+2.0.0
 ----------
+* Reimplemented to use the new Javadoc API (Java 11+ support). Thanks to vojtechhabarta!
 
 1.0.5
 -----

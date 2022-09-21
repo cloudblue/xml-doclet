@@ -1,10 +1,7 @@
-A doclet to output javadoc as XML
+xml-doclet
 =================================
 
 This library provides a doclet to output the javadoc comments from Java source code to a XML document.
-
-The name, some ideas and most unit tests were shamelessly stolen from the
-[xml-doclet](http://code.google.com/p/xml-doclet) library by Seth Call.
 
 Usage
 -----
@@ -73,3 +70,11 @@ Options
     -filename <filename>      Name of the output file.
                               Default: javadoc.xml
 
+
+Credits
+-------
+
+Some ideas and name came from Seth Call: ([xml-doclet](http://code.google.com/p/xml-doclet)).  
+Reimplemented by MarkusBernhardt: ([xml-doclet](https://github.com/MarkusBernhardt/xml-doclet)).  
+Ported to the new Javadoc API for Java 11+ by vojtechhabarta: ([xml-doclet](https://github.com/vojtechhabarta/xml-doclet/tree/rewrite-using-new-javadoc-api)).  
+And now maintained by CloudBlue.
