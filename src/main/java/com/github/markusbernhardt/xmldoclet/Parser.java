@@ -1,11 +1,5 @@
 package com.github.markusbernhardt.xmldoclet;
 
-import java.util.Map;
-import java.util.TreeMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.github.markusbernhardt.xmldoclet.xjc.Annotation;
 import com.github.markusbernhardt.xmldoclet.xjc.AnnotationArgument;
 import com.github.markusbernhardt.xmldoclet.xjc.AnnotationElement;
@@ -18,543 +12,557 @@ import com.github.markusbernhardt.xmldoclet.xjc.Field;
 import com.github.markusbernhardt.xmldoclet.xjc.Interface;
 import com.github.markusbernhardt.xmldoclet.xjc.Method;
 import com.github.markusbernhardt.xmldoclet.xjc.MethodParameter;
-import com.github.markusbernhardt.xmldoclet.xjc.ObjectFactory;
 import com.github.markusbernhardt.xmldoclet.xjc.Package;
 import com.github.markusbernhardt.xmldoclet.xjc.Root;
 import com.github.markusbernhardt.xmldoclet.xjc.TagInfo;
 import com.github.markusbernhardt.xmldoclet.xjc.TypeInfo;
 import com.github.markusbernhardt.xmldoclet.xjc.TypeParameter;
 import com.github.markusbernhardt.xmldoclet.xjc.Wildcard;
-import com.sun.javadoc.AnnotationDesc;
-import com.sun.javadoc.AnnotationTypeDoc;
-import com.sun.javadoc.AnnotationTypeElementDoc;
-import com.sun.javadoc.AnnotationValue;
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.ConstructorDoc;
-import com.sun.javadoc.FieldDoc;
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.PackageDoc;
-import com.sun.javadoc.Parameter;
-import com.sun.javadoc.ParameterizedType;
-import com.sun.javadoc.ProgramElementDoc;
-import com.sun.javadoc.RootDoc;
-import com.sun.javadoc.Tag;
-import com.sun.javadoc.Type;
-import com.sun.javadoc.TypeVariable;
-import com.sun.javadoc.WildcardType;
+import com.sun.source.doctree.BlockTagTree;
+import com.sun.source.doctree.DocCommentTree;
+import com.sun.source.doctree.DocTree;
+import com.sun.source.util.DocTrees;
+import jdk.javadoc.doclet.DocletEnvironment;
 
-/**
- * The main parser class. It scans the given Doclet document root and creates
- * the XML tree.
- * 
- * @author markus
- */
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.QualifiedNameable;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.WildcardType;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
+import javax.tools.JavaFileObject;
+import java.io.Externalizable;
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
 public class Parser {
 
-	private final static Logger log = LoggerFactory.getLogger(Parser.class);
+	private final DocletEnvironment environment;
+	private final DocTrees docTreesUtils;
+	private final Elements elementUtils;
+	private final Types typeUtils;
 
-	protected Map<String, Package> packages = new TreeMap<String, Package>();
+	// Utilities for comparison
+	private final TypeMirror objectType;
+	private final TypeMirror errorType;
+	private final TypeMirror exceptionType;
+	private final TypeMirror externalizableType;
+	private final TypeMirror serializableType;
 
-	protected ObjectFactory objectFactory = new ObjectFactory();
+	public Parser(DocletEnvironment environment) {
+		this.environment = environment;
+		this.docTreesUtils = environment.getDocTrees();
+		this.elementUtils = environment.getElementUtils();
+		this.typeUtils = environment.getTypeUtils();
 
-	/**
-	 * The entry point into parsing the javadoc.
-	 * 
-	 * @param rootDoc
-	 *            The RootDoc intstance obtained via the doclet API
-	 * @return The root node, containing everything parsed from javadoc doclet
-	 */
-	public Root parseRootDoc(RootDoc rootDoc) {
-		Root rootNode = objectFactory.createRoot();
+		this.objectType = elementUtils.getTypeElement(Object.class.getCanonicalName()).asType();
+		this.errorType = elementUtils.getTypeElement(Error.class.getCanonicalName()).asType();
+		this.exceptionType = elementUtils.getTypeElement(Exception.class.getCanonicalName()).asType();
+		this.externalizableType = elementUtils.getTypeElement(Externalizable.class.getCanonicalName()).asType();
+		this.serializableType = elementUtils.getTypeElement(Serializable.class.getCanonicalName()).asType();
+	}
 
-		for (ClassDoc classDoc : rootDoc.classes()) {
-			PackageDoc packageDoc = classDoc.containingPackage();
+	public Root transform() {
+		final Root xmlRoot = new Root();
+		transformElements(xmlRoot, environment.getSpecifiedElements());
+		return xmlRoot;
+	}
 
-			Package packageNode = packages.get(packageDoc.name());
-			if (packageNode == null) {
-				packageNode = parsePackage(packageDoc);
-				packages.put(packageDoc.name(), packageNode);
-				rootNode.getPackage().add(packageNode);
+	private void transformElements(Root xmlRoot, Collection<? extends Element> elements) {
+		for (Element element : elements) {
+			transformElement(xmlRoot, element);
+		}
+	}
+
+	private void transformElement(Root xmlRoot, Element element) {
+		if (element.getKind() == ElementKind.PACKAGE) {
+			transformPackageElement(xmlRoot, (PackageElement) element);
+		}
+		if (element.getKind().isClass() || element.getKind().isInterface()) {
+			transformTypeElement(xmlRoot, (TypeElement) element);
+		}
+	}
+
+	private void transformPackageElement(Root xmlRoot, PackageElement packageElement) {
+		final Package xmlPackage = new Package();
+		xmlPackage.setName(packageElement.getQualifiedName().toString());
+		transformJavadoc(packageElement, xmlPackage::setComment, xmlPackage.getTag());
+		xmlRoot.getPackage().add(xmlPackage);
+		transformElements(xmlRoot, packageElement.getEnclosedElements());
+	}
+
+	private void transformTypeElement(Root xmlRoot, TypeElement typeElement) {
+		if (environment.getFileKind(typeElement) != JavaFileObject.Kind.SOURCE) {
+			return;
+		}
+		if (!environment.isIncluded(typeElement)) {
+			return;
+		}
+		final PackageElement packageElement = getEnclosingPackage(typeElement);
+		if (typeElement.getKind() == ElementKind.ANNOTATION_TYPE) {
+			transformAnnotationType(xmlRoot, typeElement, packageElement);
+
+		} else if (typeElement.getKind() == ElementKind.ENUM) {
+			transformEnumType(xmlRoot, typeElement, packageElement);
+
+		} else if (typeElement.getKind() == ElementKind.INTERFACE) {
+			transformInterfaceType(xmlRoot, typeElement, packageElement);
+
+		} else if (typeElement.getKind() == ElementKind.CLASS) {
+			transformClassType(xmlRoot, typeElement, packageElement);
+		}
+
+		transformElements(xmlRoot, typeElement.getEnclosedElements());
+	}
+
+	private void transformClassType(Root xmlRoot, TypeElement typeElement, PackageElement packageElement) {
+		final Class xmlClass = new Class();
+		setNames(typeElement, packageElement, xmlClass::setName, xmlClass::setQualified);
+		setFlagIf(typeElement, Modifier.ABSTRACT, xmlClass::setAbstract);
+		xmlClass.setScope(getScope(typeElement));
+		xmlClass.setError(typeUtils.isAssignable(typeElement.asType(), errorType));
+		xmlClass.setException(typeUtils.isAssignable(typeElement.asType(), exceptionType));
+		xmlClass.setSerializable(typeUtils.isAssignable(typeElement.asType(), serializableType));
+		xmlClass.setExternalizable(typeUtils.isAssignable(typeElement.asType(), externalizableType));
+		xmlClass.setIncluded(environment.isIncluded(typeElement));
+		transformJavadoc(typeElement, xmlClass::setComment, xmlClass.getTag());
+		xmlClass.getGeneric().addAll(transformTypeParameters(typeElement.getTypeParameters()));
+		xmlClass.setClazz(transformTypeMirror(typeElement.getSuperclass()));
+		xmlClass.getInterface().addAll(transformTypeMirrors(typeElement.getInterfaces()));
+		xmlClass.getAnnotation().addAll(transformAnnotationMirrors(typeElement.getAnnotationMirrors()));
+		for (Element enclosedElement : typeElement.getEnclosedElements()) {
+			if (!environment.isIncluded(enclosedElement)) {
+				continue;
 			}
+			if (enclosedElement.getKind() == ElementKind.FIELD) {
+				final VariableElement fieldElement = (VariableElement) enclosedElement;
+				xmlClass.getField().add(transformFieldElement(fieldElement, xmlClass.getQualified()));
 
-			if (classDoc instanceof AnnotationTypeDoc) {
-				packageNode.getAnnotation().add(parseAnnotationTypeDoc((AnnotationTypeDoc) classDoc));
-			} else if (classDoc.isEnum()) {
-				packageNode.getEnum().add(parseEnum(classDoc));
-			} else if (classDoc.isInterface()) {
-				packageNode.getInterface().add(parseInterface(classDoc));
-			} else {
-				packageNode.getClazz().add(parseClass(classDoc));
+			} else if (enclosedElement.getKind() == ElementKind.CONSTRUCTOR) {
+				final ExecutableElement constructorElement = (ExecutableElement) enclosedElement;
+				xmlClass.getConstructor().add(transformConstructorElement(constructorElement, xmlClass.getQualified()));
+
+			} else if (enclosedElement.getKind() == ElementKind.METHOD) {
+				final ExecutableElement methodElement = (ExecutableElement) enclosedElement;
+				xmlClass.getMethod().add(transformMethodElement(methodElement, xmlClass.getQualified()));
 			}
 		}
-
-		return rootNode;
+		getXmlPackage(xmlRoot, packageElement).getClazz().add(xmlClass);
 	}
 
-	protected Package parsePackage(PackageDoc packageDoc) {
-		Package packageNode = objectFactory.createPackage();
-		packageNode.setName(packageDoc.name());
-		String comment = packageDoc.commentText();
-		if (comment.length() > 0) {
-			packageNode.setComment(comment);
+	private void transformInterfaceType(Root xmlRoot, TypeElement typeElement, PackageElement packageElement) {
+		final Interface xmlInterface = new Interface();
+		setNames(typeElement, packageElement, xmlInterface::setName, xmlInterface::setQualified);
+		xmlInterface.setScope(getScope(typeElement));
+		xmlInterface.setIncluded(environment.isIncluded(typeElement));
+		transformJavadoc(typeElement, xmlInterface::setComment, xmlInterface.getTag());
+		xmlInterface.getGeneric().addAll(transformTypeParameters(typeElement.getTypeParameters()));
+		xmlInterface.getInterface().addAll(transformTypeMirrors(typeElement.getInterfaces()));
+		xmlInterface.getAnnotation().addAll(transformAnnotationMirrors(typeElement.getAnnotationMirrors()));
+		for (Element enclosedElement : typeElement.getEnclosedElements()) {
+			if (!environment.isIncluded(enclosedElement)) {
+				continue;
+			}
+			if (enclosedElement.getKind() == ElementKind.FIELD) {
+				final VariableElement fieldElement = (VariableElement) enclosedElement;
+				xmlInterface.getField().add(transformFieldElement(fieldElement, xmlInterface.getQualified()));
+			}
+			if (enclosedElement.getKind() == ElementKind.METHOD) {
+				final ExecutableElement methodElement = (ExecutableElement) enclosedElement;
+				xmlInterface.getMethod().add(transformMethodElement(methodElement, xmlInterface.getQualified()));
+			}
 		}
-
-		for (Tag tag : packageDoc.tags()) {
-			packageNode.getTag().add(parseTag(tag));
-		}
-
-		return packageNode;
+		getXmlPackage(xmlRoot, packageElement).getInterface().add(xmlInterface);
 	}
 
-	/**
-	 * Parse an annotation.
-	 * 
-	 * @param annotationTypeDoc
-	 *            A AnnotationTypeDoc instance
-	 * @return the annotation node
-	 */
-	protected Annotation parseAnnotationTypeDoc(AnnotationTypeDoc annotationTypeDoc) {
-		Annotation annotationNode = objectFactory.createAnnotation();
-		annotationNode.setName(annotationTypeDoc.name());
-		annotationNode.setQualified(annotationTypeDoc.qualifiedName());
-		String comment = annotationTypeDoc.commentText();
-		if (comment.length() > 0) {
-			annotationNode.setComment(comment);
+	private void transformEnumType(Root xmlRoot, TypeElement typeElement, PackageElement packageElement) {
+		final Enum xmlEnum = new Enum();
+		setNames(typeElement, packageElement, xmlEnum::setName, xmlEnum::setQualified);
+		xmlEnum.setScope(getScope(typeElement));
+		xmlEnum.setIncluded(environment.isIncluded(typeElement));
+		transformJavadoc(typeElement, xmlEnum::setComment, xmlEnum.getTag());
+		xmlEnum.setClazz(transformTypeMirror(typeElement.getSuperclass()));
+		xmlEnum.getInterface().addAll(transformTypeMirrors(typeElement.getInterfaces()));
+		xmlEnum.getAnnotation().addAll(transformAnnotationMirrors(typeElement.getAnnotationMirrors()));
+		for (Element enclosedElement : typeElement.getEnclosedElements()) {
+			if (!environment.isIncluded(enclosedElement)) {
+				continue;
+			}
+			if (enclosedElement.getKind() == ElementKind.ENUM_CONSTANT) {
+				final VariableElement constantElement = (VariableElement) enclosedElement;
+				xmlEnum.getConstant().add(transformEnumConstant(constantElement));
+			}
 		}
-		annotationNode.setIncluded(annotationTypeDoc.isIncluded());
-		annotationNode.setScope(parseScope(annotationTypeDoc));
-
-		for (AnnotationTypeElementDoc annotationTypeElementDoc : annotationTypeDoc.elements()) {
-			annotationNode.getElement().add(parseAnnotationTypeElementDoc(annotationTypeElementDoc));
-		}
-
-		for (AnnotationDesc annotationDesc : annotationTypeDoc.annotations()) {
-			annotationNode.getAnnotation().add(parseAnnotationDesc(annotationDesc, annotationTypeDoc.qualifiedName()));
-		}
-
-		for (Tag tag : annotationTypeDoc.tags()) {
-			annotationNode.getTag().add(parseTag(tag));
-		}
-
-		return annotationNode;
+		getXmlPackage(xmlRoot, packageElement).getEnum().add(xmlEnum);
 	}
 
-	/**
-	 * Parse the elements of an annotation
-	 * 
-	 * @param annotationTypeElementDoc
-	 *            A AnnotationTypeElementDoc instance
-	 * @return the annotation element node
-	 */
-	protected AnnotationElement parseAnnotationTypeElementDoc(AnnotationTypeElementDoc annotationTypeElementDoc) {
-		AnnotationElement annotationElementNode = objectFactory.createAnnotationElement();
-		annotationElementNode.setName(annotationTypeElementDoc.name());
-		annotationElementNode.setQualified(annotationTypeElementDoc.qualifiedName());
-		annotationElementNode.setType(parseTypeInfo(annotationTypeElementDoc.returnType()));
-
-		AnnotationValue value = annotationTypeElementDoc.defaultValue();
-		if (value != null) {
-			annotationElementNode.setDefault(value.toString());
+	private void transformAnnotationType(Root xmlRoot, TypeElement typeElement, PackageElement packageElement) {
+		final Annotation xmlAnnotation = new Annotation();
+		setNames(typeElement, packageElement, xmlAnnotation::setName, xmlAnnotation::setQualified);
+		xmlAnnotation.setScope(getScope(typeElement));
+		xmlAnnotation.setIncluded(environment.isIncluded(typeElement));
+		transformJavadoc(typeElement, xmlAnnotation::setComment, xmlAnnotation.getTag());
+		xmlAnnotation.getAnnotation().addAll(transformAnnotationMirrors(typeElement.getAnnotationMirrors()));
+		for (Element enclosedElement : typeElement.getEnclosedElements()) {
+			if (!environment.isIncluded(enclosedElement)) {
+				continue;
+			}
+			if (enclosedElement.getKind() == ElementKind.METHOD) {
+				final ExecutableElement methodElement = (ExecutableElement) enclosedElement;
+				xmlAnnotation.getElement().add(transformAnnotationElement(methodElement, xmlAnnotation.getQualified()));
+			}
 		}
-
-		return annotationElementNode;
+		getXmlPackage(xmlRoot, packageElement).getAnnotation().add(xmlAnnotation);
 	}
 
-	/**
-	 * Parses annotation instances of an annotable program element
-	 * 
-	 * @param annotationDesc
-	 *            annotationDesc
-	 * @param programElement
-	 *            programElement
-	 * @return representation of annotations
-	 */
-	protected AnnotationInstance parseAnnotationDesc(AnnotationDesc annotationDesc, String programElement) {
-		AnnotationInstance annotationInstanceNode = objectFactory.createAnnotationInstance();
-
-		try {
-			AnnotationTypeDoc annotTypeInfo = annotationDesc.annotationType();
-			annotationInstanceNode.setName(annotTypeInfo.name());
-			annotationInstanceNode.setQualified(annotTypeInfo.qualifiedTypeName());
-		} catch (ClassCastException castException) {
-			log.error("Unable to obtain type data about an annotation found on: " + programElement);
-			log.error("Add to the classpath the class/jar that defines this annotation.");
+	private AnnotationElement transformAnnotationElement(ExecutableElement annotationElement, String qualified) {
+		final AnnotationElement xmlElement = new AnnotationElement();
+		xmlElement.setName(annotationElement.getSimpleName().toString());
+		xmlElement.setQualified(qualified + "." + xmlElement.getName());
+		if (annotationElement.getDefaultValue() != null) {
+			xmlElement.setDefault(String.valueOf(annotationElement.getDefaultValue().getValue()));
 		}
+		xmlElement.setType(transformTypeMirror(annotationElement.getReturnType()));
+		return xmlElement;
+	}
 
-		for (AnnotationDesc.ElementValuePair elementValuesPair : annotationDesc.elementValues()) {
-			AnnotationArgument annotationArgumentNode = objectFactory.createAnnotationArgument();
-			annotationArgumentNode.setName(elementValuesPair.element().name());
+	private EnumConstant transformEnumConstant(VariableElement constantElement) {
+		final EnumConstant xmlConstant = new EnumConstant();
+		xmlConstant.setName(constantElement.getSimpleName().toString());
+		transformJavadoc(constantElement, xmlConstant::setComment, xmlConstant.getTag());
+		xmlConstant.getAnnotation().addAll(transformAnnotationMirrors(constantElement.getAnnotationMirrors()));
+		return xmlConstant;
+	}
 
-			Type annotationArgumentType = elementValuesPair.element().returnType();
-			annotationArgumentNode.setType(parseTypeInfo(annotationArgumentType));
-			annotationArgumentNode.setPrimitive(annotationArgumentType.isPrimitive());
-			annotationArgumentNode.setArray(annotationArgumentType.dimension().length() > 0);
+	private Field transformFieldElement(VariableElement variableElement, String qualified) {
+		final Field xmlField = new Field();
+		xmlField.setName(variableElement.getSimpleName().toString());
+		xmlField.setQualified(qualified + "." + xmlField.getName());
+		xmlField.setScope(getScope(variableElement));
+		setFlagIf(variableElement, Modifier.VOLATILE, xmlField::setVolatile);
+		setFlagIf(variableElement, Modifier.TRANSIENT, xmlField::setTransient);
+		setFlagIf(variableElement, Modifier.STATIC, xmlField::setStatic);
+		setFlagIf(variableElement, Modifier.FINAL, xmlField::setFinal);
+		xmlField.setType(transformTypeMirror(variableElement.asType()));
+		transformJavadoc(variableElement, xmlField::setComment, xmlField.getTag());
+		final Object constantValue = variableElement.getConstantValue();
+		if (constantValue != null) {
+			xmlField.setConstant(elementUtils.getConstantExpression(constantValue));
+		}
+		xmlField.getAnnotation().addAll(transformAnnotationMirrors(variableElement.getAnnotationMirrors()));
+		return xmlField;
+	}
 
-			Object objValue = elementValuesPair.value().value();
-			if (objValue instanceof AnnotationValue[]) {
-				for (AnnotationValue annotationValue : (AnnotationValue[]) objValue) {
-				    if (annotationValue.value() instanceof AnnotationDesc) {
-                        AnnotationDesc annoDesc = (AnnotationDesc) annotationValue.value();
-                        annotationArgumentNode.getAnnotation().add(parseAnnotationDesc(annoDesc, programElement));
-                    } else {
-                        annotationArgumentNode.getValue().add(annotationValue.value().toString());
-                    }
+	private Constructor transformConstructorElement(ExecutableElement constructorElement, String qualified) {
+		final Constructor xmlConstructor = new Constructor();
+		xmlConstructor.setName(constructorElement.getEnclosingElement().getSimpleName().toString());
+		xmlConstructor.setSignature(getSignature(constructorElement));
+		xmlConstructor.setQualified(qualified);
+		xmlConstructor.setScope(getScope(constructorElement));
+		setFlagIf(constructorElement, Modifier.FINAL, xmlConstructor::setFinal);
+		xmlConstructor.setIncluded(environment.isIncluded(constructorElement));
+		setFlagIf(constructorElement, Modifier.NATIVE, xmlConstructor::setNative);
+		setFlagIf(constructorElement, Modifier.SYNCHRONIZED, xmlConstructor::setSynchronized);
+		setFlagIf(constructorElement, Modifier.STATIC, xmlConstructor::setStatic);
+		xmlConstructor.setVarArgs(constructorElement.isVarArgs());
+		transformJavadoc(constructorElement, xmlConstructor::setComment, xmlConstructor.getTag());
+		xmlConstructor.getParameter().addAll(transformParameters(constructorElement));
+		xmlConstructor.getException().addAll(transformExceptions(constructorElement));
+		xmlConstructor.getAnnotation().addAll(transformAnnotationMirrors(constructorElement.getAnnotationMirrors()));
+		return xmlConstructor;
+	}
+
+	private Method transformMethodElement(ExecutableElement methodElement, String qualified) {
+		final Method xmlMethod = new Method();
+		xmlMethod.setName(methodElement.getSimpleName().toString());
+		xmlMethod.setSignature(getSignature(methodElement));
+		xmlMethod.setQualified(qualified + "." + xmlMethod.getName());
+		xmlMethod.setScope(getScope(methodElement));
+		setFlagIf(methodElement, Modifier.ABSTRACT, xmlMethod::setAbstract);
+		setFlagIf(methodElement, Modifier.FINAL, xmlMethod::setFinal);
+		xmlMethod.setIncluded(environment.isIncluded(methodElement));
+		setFlagIf(methodElement, Modifier.NATIVE, xmlMethod::setNative);
+		setFlagIf(methodElement, Modifier.SYNCHRONIZED, xmlMethod::setSynchronized);
+		setFlagIf(methodElement, Modifier.STATIC, xmlMethod::setStatic);
+		xmlMethod.setVarArgs(methodElement.isVarArgs());
+		transformJavadoc(methodElement, xmlMethod::setComment, xmlMethod.getTag());
+		xmlMethod.getParameter().addAll(transformParameters(methodElement));
+		xmlMethod.setReturn(transformTypeMirror(methodElement.getReturnType()));
+		xmlMethod.getException().addAll(transformExceptions(methodElement));
+		xmlMethod.getAnnotation().addAll(transformAnnotationMirrors(methodElement.getAnnotationMirrors()));
+		return xmlMethod;
+	}
+
+	private List<TypeInfo> transformExceptions(ExecutableElement executableElement) {
+		return transformTypeMirrors(executableElement.getThrownTypes());
+	}
+
+	private List<MethodParameter> transformParameters(ExecutableElement executableElement) {
+		return executableElement.getParameters().stream()
+				.map(this::transformParameter)
+				.collect(Collectors.toList());
+	}
+
+	private MethodParameter transformParameter(VariableElement methodParameter) {
+		final MethodParameter xmlParameter = new MethodParameter();
+		xmlParameter.setName(methodParameter.getSimpleName().toString());
+		xmlParameter.setType(transformTypeMirror(methodParameter.asType()));
+		xmlParameter.getAnnotation().addAll(transformAnnotationMirrors(methodParameter.getAnnotationMirrors()));
+		return xmlParameter;
+	}
+
+	private List<AnnotationInstance> transformAnnotationMirrors(List<? extends AnnotationMirror> annotationMirrors) {
+		return annotationMirrors.stream()
+				.map(this::transformAnnotationMirror)
+				.collect(Collectors.toList());
+	}
+
+	private AnnotationInstance transformAnnotationMirror(AnnotationMirror annotationMirror) {
+		final AnnotationInstance xmlAnnotation = new AnnotationInstance();
+		setNames(annotationMirror.getAnnotationType().asElement(), xmlAnnotation::setName, xmlAnnotation::setQualified);
+		xmlAnnotation.getArgument().addAll(transformAnnotationValues(annotationMirror.getElementValues()));
+		return xmlAnnotation;
+	}
+
+	private List<AnnotationArgument> transformAnnotationValues(Map<? extends ExecutableElement, ? extends AnnotationValue> annotationValues) {
+		return annotationValues.entrySet().stream()
+				.map(entry -> transformAnnotationValue(entry.getKey(), entry.getValue()))
+				.collect(Collectors.toList());
+	}
+
+	private AnnotationArgument transformAnnotationValue(ExecutableElement element, AnnotationValue annotationValue) {
+		final AnnotationArgument xmlArgument = new AnnotationArgument();
+		xmlArgument.setName(element.getSimpleName().toString());
+		final TypeMirror type = element.getReturnType();
+		xmlArgument.setType(transformTypeMirror(type));
+		final Object value = annotationValue.getValue();
+		if (type.getKind() == TypeKind.ARRAY) {
+			final ArrayType arrayType = (ArrayType) type;
+			final TypeMirror componentType = arrayType.getComponentType();
+			xmlArgument.setPrimitive(componentType.getKind().isPrimitive());
+			xmlArgument.setArray(true);
+			if (value instanceof List<?>) {
+				final List<?> list = (List<?>) value;
+				for (Object item : list) {
+					if (item instanceof AnnotationValue) {
+						final AnnotationValue annotationValueItem = (AnnotationValue) item;
+						transformAnnotationSingleValue(xmlArgument, annotationValueItem.getValue(), componentType);
+					}
 				}
-			} else if (objValue instanceof FieldDoc) {
-				annotationArgumentNode.getValue().add(((FieldDoc) objValue).name());
-			} else if (objValue instanceof ClassDoc) {
-				annotationArgumentNode.getValue().add(((ClassDoc) objValue).qualifiedTypeName());
+			}
+		} else {
+			xmlArgument.setPrimitive(type.getKind().isPrimitive());
+			xmlArgument.setArray(false);
+			transformAnnotationSingleValue(xmlArgument, value, type);
+		}
+		return xmlArgument;
+	}
+
+	private void transformAnnotationSingleValue(AnnotationArgument xmlArgument, Object value, TypeMirror type) {
+		if (type.getKind().isPrimitive()) {
+			if (value instanceof Character) {
+				final Character character = (Character) value;
+				xmlArgument.getValue().add(String.valueOf((long) character));
 			} else {
-				annotationArgumentNode.getValue().add(objValue.toString());
+				xmlArgument.getValue().add(String.valueOf(value));
 			}
-			annotationInstanceNode.getArgument().add(annotationArgumentNode);
+		} else if (value instanceof String) {
+			xmlArgument.getValue().add(String.valueOf(value));
+		} else if (value instanceof TypeMirror) {
+			final TypeMirror typeMirror = (TypeMirror) value;
+			xmlArgument.getValue().add(typeMirror.toString());
+		} else if (value instanceof VariableElement) {
+			final VariableElement variableElement = (VariableElement) value;
+			xmlArgument.getValue().add(variableElement.getSimpleName().toString());
+		} else if (value instanceof AnnotationMirror) {
+			final AnnotationMirror annotationMirror = (AnnotationMirror) value;
+			xmlArgument.getAnnotation().add(transformAnnotationMirror(annotationMirror));
+		} else if (value instanceof List<?>) {
+			// already handled by calling method
 		}
-
-		return annotationInstanceNode;
 	}
 
-	protected Enum parseEnum(ClassDoc classDoc) {
-		Enum enumNode = objectFactory.createEnum();
-		enumNode.setName(classDoc.name());
-		enumNode.setQualified(classDoc.qualifiedName());
-		String comment = classDoc.commentText();
-		if (comment.length() > 0) {
-			enumNode.setComment(comment);
-		}
-		enumNode.setIncluded(classDoc.isIncluded());
-		enumNode.setScope(parseScope(classDoc));
-
-		Type superClassType = classDoc.superclassType();
-		if (superClassType != null) {
-			enumNode.setClazz(parseTypeInfo(superClassType));
-		}
-
-		for (Type interfaceType : classDoc.interfaceTypes()) {
-			enumNode.getInterface().add(parseTypeInfo(interfaceType));
-		}
-
-		for (FieldDoc field : classDoc.enumConstants()) {
-			enumNode.getConstant().add(parseEnumConstant(field));
-		}
-
-		for (AnnotationDesc annotationDesc : classDoc.annotations()) {
-			enumNode.getAnnotation().add(parseAnnotationDesc(annotationDesc, classDoc.qualifiedName()));
-		}
-
-		for (Tag tag : classDoc.tags()) {
-			enumNode.getTag().add(parseTag(tag));
-		}
-
-		return enumNode;
+	private List<TypeParameter> transformTypeParameters(List<? extends TypeParameterElement> typeParameterElements) {
+		return typeParameterElements.stream()
+				.map(this::transformTypeParameter)
+				.collect(Collectors.toList());
 	}
 
-	/**
-	 * Parses an enum type definition
-	 * 
-	 * @param fieldDoc
-	 * @return
-	 */
-	protected EnumConstant parseEnumConstant(FieldDoc fieldDoc) {
-		EnumConstant enumConstant = objectFactory.createEnumConstant();
-		enumConstant.setName(fieldDoc.name());
-		String comment = fieldDoc.commentText();
-		if (comment.length() > 0) {
-			enumConstant.setComment(comment);
-		}
-
-		for (AnnotationDesc annotationDesc : fieldDoc.annotations()) {
-			enumConstant.getAnnotation().add(parseAnnotationDesc(annotationDesc, fieldDoc.qualifiedName()));
-		}
-
-		for (Tag tag : fieldDoc.tags()) {
-			enumConstant.getTag().add(parseTag(tag));
-		}
-
-		return enumConstant;
+	private TypeParameter transformTypeParameter(TypeParameterElement typeParameterElement) {
+		final TypeParameter xmlTypeParameter = new TypeParameter();
+		xmlTypeParameter.setName(typeParameterElement.getSimpleName().toString());
+		final List<String> bounds = typeParameterElement.getBounds().stream()
+				.filter(bound -> !typeUtils.isSameType(bound, objectType))
+				.map(TypeMirror::toString)
+				.collect(Collectors.toList());
+		xmlTypeParameter.getBound().addAll(bounds);
+		return xmlTypeParameter;
 	}
 
-	protected Interface parseInterface(ClassDoc classDoc) {
-
-		Interface interfaceNode = objectFactory.createInterface();
-		interfaceNode.setName(classDoc.name());
-		interfaceNode.setQualified(classDoc.qualifiedName());
-		String comment = classDoc.commentText();
-		if (comment.length() > 0) {
-			interfaceNode.setComment(comment);
-		}
-		interfaceNode.setIncluded(classDoc.isIncluded());
-		interfaceNode.setScope(parseScope(classDoc));
-
-		for (TypeVariable typeVariable : classDoc.typeParameters()) {
-			interfaceNode.getGeneric().add(parseTypeParameter(typeVariable));
-		}
-
-		for (Type interfaceType : classDoc.interfaceTypes()) {
-			interfaceNode.getInterface().add(parseTypeInfo(interfaceType));
-		}
-
-		for (MethodDoc method : classDoc.methods()) {
-			interfaceNode.getMethod().add(parseMethod(method));
-		}
-
-		for (AnnotationDesc annotationDesc : classDoc.annotations()) {
-			interfaceNode.getAnnotation().add(parseAnnotationDesc(annotationDesc, classDoc.qualifiedName()));
-		}
-
-		for (Tag tag : classDoc.tags()) {
-			interfaceNode.getTag().add(parseTag(tag));
-		}
-
-		for (FieldDoc field : classDoc.fields()) {
-			interfaceNode.getField().add(parseField(field));
-		}
-
-		return interfaceNode;
-	}
-
-	protected Class parseClass(ClassDoc classDoc) {
-
-		Class classNode = objectFactory.createClass();
-		classNode.setName(classDoc.name());
-		classNode.setQualified(classDoc.qualifiedName());
-		String comment = classDoc.commentText();
-		if (comment.length() > 0) {
-			classNode.setComment(comment);
-		}
-		classNode.setAbstract(classDoc.isAbstract());
-		classNode.setError(classDoc.isError());
-		classNode.setException(classDoc.isException());
-		classNode.setExternalizable(classDoc.isExternalizable());
-		classNode.setIncluded(classDoc.isIncluded());
-		classNode.setSerializable(classDoc.isSerializable());
-		classNode.setScope(parseScope(classDoc));
-
-		for (TypeVariable typeVariable : classDoc.typeParameters()) {
-			classNode.getGeneric().add(parseTypeParameter(typeVariable));
-		}
-
-		Type superClassType = classDoc.superclassType();
-		if (superClassType != null) {
-			classNode.setClazz(parseTypeInfo(superClassType));
-		}
-
-		for (Type interfaceType : classDoc.interfaceTypes()) {
-			classNode.getInterface().add(parseTypeInfo(interfaceType));
-		}
-
-		for (MethodDoc method : classDoc.methods()) {
-			classNode.getMethod().add(parseMethod(method));
-		}
-
-		for (AnnotationDesc annotationDesc : classDoc.annotations()) {
-			classNode.getAnnotation().add(parseAnnotationDesc(annotationDesc, classDoc.qualifiedName()));
-		}
-
-		for (ConstructorDoc constructor : classDoc.constructors()) {
-			classNode.getConstructor().add(parseConstructor(constructor));
-		}
-
-		for (FieldDoc field : classDoc.fields()) {
-			classNode.getField().add(parseField(field));
-		}
-
-		for (Tag tag : classDoc.tags()) {
-			classNode.getTag().add(parseTag(tag));
-		}
-
-		return classNode;
-	}
-
-	protected Constructor parseConstructor(ConstructorDoc constructorDoc) {
-		Constructor constructorNode = objectFactory.createConstructor();
-
-		constructorNode.setName(constructorDoc.name());
-		constructorNode.setQualified(constructorDoc.qualifiedName());
-		String comment = constructorDoc.commentText();
-		if (comment.length() > 0) {
-			constructorNode.setComment(comment);
-		}
-		constructorNode.setScope(parseScope(constructorDoc));
-		constructorNode.setIncluded(constructorDoc.isIncluded());
-		constructorNode.setFinal(constructorDoc.isFinal());
-		constructorNode.setNative(constructorDoc.isNative());
-		constructorNode.setStatic(constructorDoc.isStatic());
-		constructorNode.setSynchronized(constructorDoc.isSynchronized());
-		constructorNode.setVarArgs(constructorDoc.isVarArgs());
-		constructorNode.setSignature(constructorDoc.signature());
-
-		for (Parameter parameter : constructorDoc.parameters()) {
-			constructorNode.getParameter().add(parseMethodParameter(parameter));
-		}
-
-		for (Type exceptionType : constructorDoc.thrownExceptionTypes()) {
-			constructorNode.getException().add(parseTypeInfo(exceptionType));
-		}
-
-		for (AnnotationDesc annotationDesc : constructorDoc.annotations()) {
-			constructorNode.getAnnotation().add(parseAnnotationDesc(annotationDesc, constructorDoc.qualifiedName()));
-		}
-
-		for (Tag tag : constructorDoc.tags()) {
-			constructorNode.getTag().add(parseTag(tag));
-		}
-
-		return constructorNode;
-	}
-
-	protected Method parseMethod(MethodDoc methodDoc) {
-		Method methodNode = objectFactory.createMethod();
-
-		methodNode.setName(methodDoc.name());
-		methodNode.setQualified(methodDoc.qualifiedName());
-		String comment = methodDoc.commentText();
-		if (comment.length() > 0) {
-			methodNode.setComment(comment);
-		}
-		methodNode.setScope(parseScope(methodDoc));
-		methodNode.setAbstract(methodDoc.isAbstract());
-		methodNode.setIncluded(methodDoc.isIncluded());
-		methodNode.setFinal(methodDoc.isFinal());
-		methodNode.setNative(methodDoc.isNative());
-		methodNode.setStatic(methodDoc.isStatic());
-		methodNode.setSynchronized(methodDoc.isSynchronized());
-		methodNode.setVarArgs(methodDoc.isVarArgs());
-		methodNode.setSignature(methodDoc.signature());
-		methodNode.setReturn(parseTypeInfo(methodDoc.returnType()));
-
-		for (Parameter parameter : methodDoc.parameters()) {
-			methodNode.getParameter().add(parseMethodParameter(parameter));
-		}
-
-		for (Type exceptionType : methodDoc.thrownExceptionTypes()) {
-			methodNode.getException().add(parseTypeInfo(exceptionType));
-		}
-
-		for (AnnotationDesc annotationDesc : methodDoc.annotations()) {
-			methodNode.getAnnotation().add(parseAnnotationDesc(annotationDesc, methodDoc.qualifiedName()));
-		}
-
-		for (Tag tag : methodDoc.tags()) {
-			methodNode.getTag().add(parseTag(tag));
-		}
-
-		return methodNode;
-	}
-
-	protected MethodParameter parseMethodParameter(Parameter parameter) {
-		MethodParameter parameterMethodNode = objectFactory.createMethodParameter();
-		parameterMethodNode.setName(parameter.name());
-		parameterMethodNode.setType(parseTypeInfo(parameter.type()));
-
-		for (AnnotationDesc annotationDesc : parameter.annotations()) {
-			parameterMethodNode.getAnnotation().add(parseAnnotationDesc(annotationDesc, parameter.typeName()));
-		}
-
-		return parameterMethodNode;
-	}
-
-	protected Field parseField(FieldDoc fieldDoc) {
-		Field fieldNode = objectFactory.createField();
-		fieldNode.setType(parseTypeInfo(fieldDoc.type()));
-		fieldNode.setName(fieldDoc.name());
-		fieldNode.setQualified(fieldDoc.qualifiedName());
-		String comment = fieldDoc.commentText();
-		if (comment.length() > 0) {
-			fieldNode.setComment(comment);
-		}
-		fieldNode.setScope(parseScope(fieldDoc));
-		fieldNode.setFinal(fieldDoc.isFinal());
-		fieldNode.setStatic(fieldDoc.isStatic());
-		fieldNode.setVolatile(fieldDoc.isVolatile());
-		fieldNode.setTransient(fieldDoc.isTransient());
-		fieldNode.setConstant(fieldDoc.constantValueExpression());
-
-		for (AnnotationDesc annotationDesc : fieldDoc.annotations()) {
-			fieldNode.getAnnotation().add(parseAnnotationDesc(annotationDesc, fieldDoc.qualifiedName()));
-		}
-
-		for (Tag tag : fieldDoc.tags()) {
-			fieldNode.getTag().add(parseTag(tag));
-		}
-
-		return fieldNode;
-	}
-
-	protected TypeInfo parseTypeInfo(Type type) {
-		TypeInfo typeInfoNode = objectFactory.createTypeInfo();
-		typeInfoNode.setQualified(type.qualifiedTypeName());
-		String dimension = type.dimension();
-		if (dimension.length() > 0) {
-			typeInfoNode.setDimension(dimension);
-		}
-
-		WildcardType wildcard = type.asWildcardType();
-		if (wildcard != null) {
-			typeInfoNode.setWildcard(parseWildcard(wildcard));
-		}
-
-		ParameterizedType parameterized = type.asParameterizedType();
-		if (parameterized != null) {
-			for (Type typeArgument : parameterized.typeArguments()) {
-				typeInfoNode.getGeneric().add(parseTypeInfo(typeArgument));
+	private void transformJavadoc(Element element, Consumer<String> commentSetter, List<TagInfo> tags) {
+		final DocCommentTree docCommentTree = docTreesUtils.getDocCommentTree(element);
+		if (docCommentTree != null) {
+			final String fullBody = docCommentTree.getFullBody().stream()
+					.map(Object::toString)
+					.collect(Collectors.joining());
+			if (!fullBody.isEmpty()) {
+				commentSetter.accept(fullBody);
+			}
+			for (DocTree blockTag : docCommentTree.getBlockTags()) {
+				if (blockTag instanceof BlockTagTree) {
+					final BlockTagTree blockTagTree = (BlockTagTree) blockTag;
+					final String[] parts = blockTagTree.toString().split(" ", 2);
+					if (parts.length == 2) {
+						final TagInfo tag = new TagInfo();
+						tag.setName(parts[0]);
+						tag.setText(parts[1]);
+						tags.add(tag);
+					}
+				}
 			}
 		}
-
-		return typeInfoNode;
 	}
 
-	protected Wildcard parseWildcard(WildcardType wildcard) {
-		Wildcard wildcardNode = objectFactory.createWildcard();
-
-		for (Type extendType : wildcard.extendsBounds()) {
-			wildcardNode.getExtendsBound().add(parseTypeInfo(extendType));
-		}
-
-		for (Type superType : wildcard.superBounds()) {
-			wildcardNode.getSuperBound().add(parseTypeInfo(superType));
-		}
-
-		return wildcardNode;
+	private PackageElement getEnclosingPackage(Element element) {
+		Objects.requireNonNull(element);
+		return element.getKind() == ElementKind.PACKAGE
+				? (PackageElement) element
+				: getEnclosingPackage(element.getEnclosingElement());
 	}
 
-	/**
-	 * Parse type variables for generics
-	 * 
-	 * @param typeVariable
-	 * @return
-	 */
-	protected TypeParameter parseTypeParameter(TypeVariable typeVariable) {
-		TypeParameter typeParameter = objectFactory.createTypeParameter();
-		typeParameter.setName(typeVariable.typeName());
-
-		for (Type bound : typeVariable.bounds()) {
-			typeParameter.getBound().add(bound.qualifiedTypeName());
-		}
-
-		return typeParameter;
-	}
-
-	protected TagInfo parseTag(Tag tagDoc) {
-		TagInfo tagNode = objectFactory.createTagInfo();
-		tagNode.setName(tagDoc.kind());
-		tagNode.setText(tagDoc.text());
-		return tagNode;
-	}
-
-	/**
-	 * Returns string representation of scope
-	 * 
-	 * @param doc
-	 * @return
-	 */
-	protected String parseScope(ProgramElementDoc doc) {
-		if (doc.isPrivate()) {
-			return "private";
-		} else if (doc.isProtected()) {
-			return "protected";
-		} else if (doc.isPublic()) {
-			return "public";
-		}
+	private String getScope(Element element) {
+		final Set<Modifier> modifiers = element.getModifiers();
+		if (modifiers.contains(Modifier.PUBLIC)) return "public";
+		if (modifiers.contains(Modifier.PROTECTED)) return "protected";
+		if (modifiers.contains(Modifier.PRIVATE)) return "private";
 		return "";
 	}
+
+	private String getSignature(ExecutableElement executableElement) {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("(");
+		final List<? extends VariableElement> parameters = executableElement.getParameters();
+		final Iterator<? extends VariableElement> iterator = parameters.iterator();
+		while (iterator.hasNext()) {
+			final VariableElement variableElement = iterator.next();
+			if (variableElement.asType().getKind() == TypeKind.ARRAY && executableElement.isVarArgs()) {
+				final ArrayType arrayType = (ArrayType) variableElement.asType();
+				sb.append(stripType(arrayType.getComponentType().toString()));
+				sb.append("...");
+			} else {
+				sb.append(stripType(variableElement.asType().toString()));
+			}
+			if (iterator.hasNext()) {
+				sb.append(", ");
+			}
+		}
+		sb.append(")");
+		return sb.toString();
+	}
+
+	private List<TypeInfo> transformTypeMirrorIfNonNull(TypeMirror typeMirror) {
+		return typeMirror != null
+				? Collections.singletonList(transformTypeMirror(typeMirror))
+				: Collections.emptyList();
+	}
+
+	private List<TypeInfo> transformTypeMirrors(List<? extends TypeMirror> typeMirrors) {
+		return typeMirrors.stream()
+				.map(this::transformTypeMirror)
+				.collect(Collectors.toList());
+	}
+
+	private TypeInfo transformTypeMirror(TypeMirror typeMirror) {
+		final TypeInfo xmlTypeInfo = new TypeInfo();
+		if (typeMirror.getKind() == TypeKind.DECLARED) {
+			xmlTypeInfo.setQualified(stripType(typeUtils.erasure(typeMirror).toString()));
+//			xmlTypeInfo.setQualified(typeUtils.erasure(typeMirror).toString());
+			final DeclaredType declaredType = (DeclaredType) typeMirror;
+			final List<TypeInfo> generic = declaredType.getTypeArguments().stream()
+					.map(this::transformTypeMirror)
+					.collect(Collectors.toList());
+			xmlTypeInfo.getGeneric().addAll(generic);
+		} else if (typeMirror.getKind() == TypeKind.ARRAY) {
+			final ArrayType arrayType = (ArrayType) typeMirror;
+			final TypeInfo typeInfo = transformTypeMirror(arrayType.getComponentType());
+			typeInfo.setDimension((typeInfo.getDimension() != null ? typeInfo.getDimension() : "") + "[]");
+			return typeInfo;
+		} else if (typeMirror.getKind() == TypeKind.WILDCARD) {
+			xmlTypeInfo.setQualified("?");
+			final WildcardType wildcardType = (WildcardType) typeMirror;
+			final Wildcard wildcard = new Wildcard();
+			wildcard.getExtendsBound().addAll(transformTypeMirrorIfNonNull(wildcardType.getExtendsBound()));
+			wildcard.getSuperBound().addAll(transformTypeMirrorIfNonNull(wildcardType.getSuperBound()));
+			xmlTypeInfo.setWildcard(wildcard);
+		} else {
+			xmlTypeInfo.setQualified(stripType(typeMirror.toString()));
+		}
+		return xmlTypeInfo;
+	}
+
+	private void setFlagIf(Element element, Modifier modifier, Consumer<Boolean> flagSetter) {
+		flagSetter.accept(element.getModifiers().contains(modifier));
+	}
+
+	private Package getXmlPackage(Root xmlRoot, PackageElement packageElement) {
+		final Package xmlPackage = xmlRoot.getPackage().stream()
+				.filter(p -> Objects.equals(p.getName(), packageElement.getQualifiedName().toString()))
+				.findFirst()
+				.orElse(null);
+		if (xmlPackage == null) {
+			final Package newXmlPackage = new Package();
+			newXmlPackage.setName(packageElement.getQualifiedName().toString());
+			xmlRoot.getPackage().add(newXmlPackage);
+			return newXmlPackage;
+		} else {
+			return xmlPackage;
+		}
+	}
+
+	private void setNames(QualifiedNameable qualifiedNameable, PackageElement packageElement, Consumer<String> nameSetter, Consumer<String> qualifiedSetter) {
+		setNames(qualifiedNameable.getQualifiedName().toString(), packageElement, nameSetter, qualifiedSetter);
+	}
+
+	private void setNames(Element element, Consumer<String> nameSetter, Consumer<String> qualifiedSetter) {
+		setNames(element.toString(), getEnclosingPackage(element), nameSetter, qualifiedSetter);
+	}
+
+	private void setNames(String qualifiedName, PackageElement packageElement, Consumer<String> nameSetter, Consumer<String> qualifiedSetter) {
+		final String packageName = packageElement.getQualifiedName().toString();
+		final String packagePrefix = packageName.isEmpty() ? "" : packageName + ".";
+		final String name = qualifiedName.substring(packagePrefix.length());
+		nameSetter.accept(name);
+		qualifiedSetter.accept(qualifiedName);
+	}
+
+	/**
+	 * Strips annotations from type.
+	 */
+	private String stripType(String type) {
+		return Arrays.stream(type.split(" "))
+			.dropWhile(s -> s.startsWith("@"))
+			.collect(Collectors.joining(" "));
+	}
+
 }
