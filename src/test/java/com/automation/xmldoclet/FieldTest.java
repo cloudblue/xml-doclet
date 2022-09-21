@@ -45,33 +45,33 @@ public class FieldTest extends AbstractTestParent {
         Class classNode = packageNode.getClazz().get(0);
         List<Field> fields = classNode.getField();
 
-        assertEquals(rootNode.getPackage().size(), 1);
+        assertEquals(1, rootNode.getPackage().size());
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), getSimpledataPackage());
-        assertEquals(packageNode.getAnnotation().size(), 0);
-        assertEquals(packageNode.getEnum().size(), 0);
-        assertEquals(packageNode.getInterface().size(), 0);
-        assertEquals(packageNode.getClazz().size(), 1);
+        assertEquals(getSimpledataPackage(), packageNode.getName());
+        assertEquals(0, packageNode.getAnnotation().size());
+        assertEquals(0, packageNode.getEnum().size());
+        assertEquals(0, packageNode.getInterface().size());
+        assertEquals(1, packageNode.getClazz().size());
 
         // field0 -- test name
         Field field = findByFieldName("field0", fields);
-        assertEquals(field.getName(), "field0");
+        assertEquals("field0", field.getName());
 
         // field1 -- test public field
         field = findByFieldName("field1", fields);
-        assertEquals(field.getScope(), "public");
+        assertEquals("public", field.getScope());
 
         // field2 -- test private field
         field = findByFieldName("field2", fields);
-        assertEquals(field.getScope(), "private");
+        assertEquals("private", field.getScope());
 
         // field3 -- default scope field (non defined)
         field = findByFieldName("field3", fields);
-        assertEquals(field.getScope(), "");
+        assertEquals("", field.getScope());
 
         // field4 -- protected scope field
         field = findByFieldName("field4", fields);
-        assertEquals(field.getScope(), "protected");
+        assertEquals("protected", field.getScope());
 
         // field5 -- volatile field
         field = findByFieldName("field5", fields);
@@ -103,71 +103,71 @@ public class FieldTest extends AbstractTestParent {
 
         // field9 -- string final expression
         field = findByFieldName("field9", fields);
-        assertEquals(field.getConstant(), "\"testy\"");
+        assertEquals("\"testy\"", field.getConstant());
 
         // field10 -- int final expression
         field = findByFieldName("field10", fields);
-        assertEquals(field.getConstant(), "10");
+        assertEquals("10", field.getConstant());
 
         // field11 -- annotation
         field = findByFieldName("field11", fields);
-        assertEquals(field.getAnnotation().size(), 1);
+        assertEquals(1, field.getAnnotation().size());
 
         AnnotationInstance annotation = field.getAnnotation().get(0);
-        assertEquals(annotation.getQualified(), "java.lang.Deprecated");
-        assertEquals(annotation.getName(), "Deprecated");
-        assertEquals(annotation.getArgument().size(), 0);
+        assertEquals("java.lang.Deprecated", annotation.getQualified());
+        assertEquals("Deprecated", annotation.getName());
+        assertEquals(0, annotation.getArgument().size());
 
         // field12 -- two annotations
         field = findByFieldName("field12", fields);
-        assertEquals(field.getAnnotation().size(), 2);
+        assertEquals(2, field.getAnnotation().size());
 
         annotation = field.getAnnotation().get(0);
-        assertEquals(annotation.getQualified(), "java.lang.Deprecated");
-        assertEquals(annotation.getName(), "Deprecated");
-        assertEquals(annotation.getArgument().size(), 0);
+        assertEquals("java.lang.Deprecated", annotation.getQualified());
+        assertEquals("Deprecated", annotation.getName());
+        assertEquals(0, annotation.getArgument().size());
 
         annotation = field.getAnnotation().get(1);
-        assertEquals(annotation.getQualified(), Annotation12.class.getName());
-        assertEquals(annotation.getName(), Annotation12.class.getSimpleName());
-        assertEquals(annotation.getArgument().size(), 1);
+        assertEquals(Annotation12.class.getName(), annotation.getQualified());
+        assertEquals(Annotation12.class.getSimpleName(), annotation.getName());
+        assertEquals(1, annotation.getArgument().size());
 
         AnnotationArgument argument = annotation.getArgument().get(0);
-        assertEquals(argument.getName(), "value");
-        assertEquals(argument.getValue().get(0), "mister");
+        assertEquals("value", argument.getName());
+        assertEquals("mister", argument.getValue().get(0));
 
         // field13 - type testing
         field = findByFieldName("field13", fields);
         assertNotNull(field.getType());
-        assertEquals(field.getType().getQualified(), "java.lang.String");
+        assertEquals("java.lang.String", field.getType().getQualified());
         assertNull(field.getType().getDimension());
         assertNull(field.getType().getWildcard());
-        assertEquals(field.getType().getGeneric().size(), 0);
+        assertEquals(0, field.getType().getGeneric().size());
 
         // field14 - wild card
         field = findByFieldName("field14", fields);
         assertNotNull(field.getType());
-        assertEquals(field.getType().getQualified(), "java.util.ArrayList");
+        assertEquals("java.util.ArrayList", field.getType().getQualified());
         assertNotNull(field.getType().getGeneric());
-        assertEquals(field.getType().getGeneric().size(), 1);
-        assertEquals(field.getType().getGeneric().get(0).getQualified(), "?");
+        assertEquals(1, field.getType().getGeneric().size());
+        assertEquals("?", field.getType().getGeneric().get(0).getQualified());
         assertNotNull(field.getType().getGeneric().get(0).getWildcard());
 
         // field15 - typed generic
         field = findByFieldName("field15", fields);
         assertNotNull(field.getType());
-        assertEquals(field.getType().getQualified(), "java.util.HashMap");
-        assertEquals(field.getType().getGeneric().size(), 2);
-        assertEquals(field.getType().getGeneric().get(0).getQualified(), "java.lang.String");
+        assertEquals("java.util.HashMap", field.getType().getQualified());
+        assertEquals(2, field.getType().getGeneric().size());
+        assertEquals("java.lang.String", field.getType().getGeneric().get(0).getQualified());
         assertNull(field.getType().getGeneric().get(0).getWildcard());
-        assertEquals(field.getType().getGeneric().get(1).getQualified(), "java.lang.Integer");
+        assertEquals("java.lang.Integer", field.getType().getGeneric().get(1).getQualified());
         assertNull(field.getType().getGeneric().get(1).getWildcard());
 
         // field16 - array
         field = findByFieldName("field16", fields);
         assertNotNull(field.getType());
-        assertEquals(field.getType().getQualified(), "java.lang.String");
-        assertEquals(field.getType().getDimension(), "[]");
+        assertEquals("java.lang.String", field.getType().getQualified());
+        assertEquals("[]", field.getType().getDimension());
     }
 
     /**

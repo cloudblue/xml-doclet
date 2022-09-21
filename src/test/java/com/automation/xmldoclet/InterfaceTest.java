@@ -46,21 +46,21 @@ public class InterfaceTest extends AbstractTestParent {
         Package packageNode = rootNode.getPackage().get(0);
         Interface interfaceNode = packageNode.getInterface().get(0);
 
-        assertEquals(rootNode.getPackage().size(), 1);
+        assertEquals(1, rootNode.getPackage().size());
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), getSimpledataPackage());
-        assertEquals(packageNode.getAnnotation().size(), 0);
-        assertEquals(packageNode.getEnum().size(), 0);
-        assertEquals(packageNode.getInterface().size(), 1);
-        assertEquals(packageNode.getClazz().size(), 0);
+        assertEquals(getSimpledataPackage(), packageNode.getName());
+        assertEquals(0, packageNode.getAnnotation().size());
+        assertEquals(0, packageNode.getEnum().size());
+        assertEquals(1, packageNode.getInterface().size());
+        assertEquals(0, packageNode.getClazz().size());
 
-        assertEquals(interfaceNode.getComment(), "Interface1");
-        assertEquals(interfaceNode.getName(), Interface1.class.getSimpleName());
-        assertEquals(interfaceNode.getQualified(), Interface1.class.getName());
-        assertEquals(interfaceNode.getScope(), "public");
-        assertEquals(interfaceNode.getMethod().size(), 0);
-        assertEquals(interfaceNode.getAnnotation().size(), 0);
-        assertEquals(interfaceNode.getInterface().size(), 0);
+        assertEquals("Interface1", interfaceNode.getComment());
+        assertEquals(Interface1.class.getSimpleName(), interfaceNode.getName());
+        assertEquals(Interface1.class.getName(), interfaceNode.getQualified());
+        assertEquals("public", interfaceNode.getScope());
+        assertEquals(0, interfaceNode.getMethod().size());
+        assertEquals(0, interfaceNode.getAnnotation().size());
+        assertEquals(0, interfaceNode.getInterface().size());
         assertTrue(interfaceNode.isIncluded());
     }
 
@@ -76,37 +76,37 @@ public class InterfaceTest extends AbstractTestParent {
         Interface interfaceNode = packageNode.getInterface().get(0);
         Method method = interfaceNode.getMethod().get(0);
 
-        assertEquals(rootNode.getPackage().size(), 1);
+        assertEquals(1, rootNode.getPackage().size());
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), getSimpledataPackage());
-        assertEquals(packageNode.getAnnotation().size(), 0);
-        assertEquals(packageNode.getEnum().size(), 0);
-        assertEquals(packageNode.getInterface().size(), 1);
-        assertEquals(packageNode.getClazz().size(), 0);
+        assertEquals(getSimpledataPackage(), packageNode.getName());
+        assertEquals(0, packageNode.getAnnotation().size());
+        assertEquals(0, packageNode.getEnum().size());
+        assertEquals(1, packageNode.getInterface().size());
+        assertEquals(0, packageNode.getClazz().size());
 
-        assertEquals(interfaceNode.getComment(), "Interface2");
-        assertEquals(interfaceNode.getName(), Interface2.class.getSimpleName());
-        assertEquals(interfaceNode.getQualified(), Interface2.class.getName());
-        assertEquals(interfaceNode.getScope(), "public");
-        assertEquals(interfaceNode.getMethod().size(), 1);
-        assertEquals(interfaceNode.getAnnotation().size(), 0);
-        assertEquals(interfaceNode.getInterface().size(), 0);
+        assertEquals("Interface2", interfaceNode.getComment());
+        assertEquals(Interface2.class.getSimpleName(), interfaceNode.getName());
+        assertEquals(Interface2.class.getName(), interfaceNode.getQualified());
+        assertEquals("public", interfaceNode.getScope());
+        assertEquals(1, interfaceNode.getMethod().size());
+        assertEquals(0, interfaceNode.getAnnotation().size());
+        assertEquals(0, interfaceNode.getInterface().size());
         assertTrue(interfaceNode.isIncluded());
 
         // verify method
-        assertEquals(method.getComment(), "method1");
-        assertEquals(method.getName(), "method1");
-        assertEquals(method.getSignature(), "()");
+        assertEquals("method1", method.getComment());
+        assertEquals("method1", method.getName());
+        assertEquals("()", method.getSignature());
         assertFalse(method.isFinal());
         assertFalse(method.isNative());
         assertFalse(method.isStatic());
         assertFalse(method.isSynchronized());
         assertFalse(method.isVarArgs());
-        assertEquals(method.getQualified(), getSimpledataPackage() + ".Interface2.method1");
-        assertEquals(method.getScope(), "public");
-        assertEquals(method.getAnnotation().size(), 0);
-        assertEquals(method.getParameter().size(), 0);
-        assertEquals(method.getException().size(), 0);
+        assertEquals(getSimpledataPackage() + ".Interface2.method1", method.getQualified());
+        assertEquals("public", method.getScope());
+        assertEquals(0, method.getAnnotation().size());
+        assertEquals(0, method.getParameter().size());
+        assertEquals(0, method.getException().size());
 
     }
 
@@ -121,25 +121,25 @@ public class InterfaceTest extends AbstractTestParent {
         Package packageNode = rootNode.getPackage().get(0);
         Interface interfaceNode = packageNode.getInterface().get(0);
 
-        assertEquals(rootNode.getPackage().size(), 1);
+        assertEquals(1, rootNode.getPackage().size());
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), getSimpledataPackage());
-        assertEquals(packageNode.getAnnotation().size(), 0);
-        assertEquals(packageNode.getEnum().size(), 0);
-        assertEquals(packageNode.getInterface().size(), 1);
-        assertEquals(packageNode.getClazz().size(), 0);
+        assertEquals(getSimpledataPackage(), packageNode.getName());
+        assertEquals(0, packageNode.getAnnotation().size());
+        assertEquals(0, packageNode.getEnum().size());
+        assertEquals(1, packageNode.getInterface().size());
+        assertEquals(0, packageNode.getClazz().size());
 
-        assertEquals(interfaceNode.getComment(), "Interface3");
-        assertEquals(interfaceNode.getName(), Interface3.class.getSimpleName());
-        assertEquals(interfaceNode.getQualified(), Interface3.class.getName());
-        assertEquals(interfaceNode.getScope(), "public");
-        assertEquals(interfaceNode.getMethod().size(), 0);
-        assertEquals(interfaceNode.getAnnotation().size(), 0);
-        assertEquals(interfaceNode.getInterface().size(), 1);
+        assertEquals("Interface3", interfaceNode.getComment());
+        assertEquals(Interface3.class.getSimpleName(), interfaceNode.getName());
+        assertEquals(Interface3.class.getName(), interfaceNode.getQualified());
+        assertEquals("public", interfaceNode.getScope());
+        assertEquals(0, interfaceNode.getMethod().size());
+        assertEquals(0, interfaceNode.getAnnotation().size());
+        assertEquals(1, interfaceNode.getInterface().size());
         assertTrue(interfaceNode.isIncluded());
 
         // verify interface
-        assertEquals(interfaceNode.getInterface().get(0).getQualified(), java.io.Serializable.class.getName());
+        assertEquals(java.io.Serializable.class.getName(), interfaceNode.getInterface().get(0).getQualified());
     }
 
     /**
@@ -154,28 +154,28 @@ public class InterfaceTest extends AbstractTestParent {
         Interface interfaceNode = packageNode.getInterface().get(0);
         AnnotationInstance annotationInstanceNode = interfaceNode.getAnnotation().get(0);
 
-        assertEquals(rootNode.getPackage().size(), 1);
+        assertEquals(1, rootNode.getPackage().size());
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), getSimpledataPackage());
-        assertEquals(packageNode.getAnnotation().size(), 0);
-        assertEquals(packageNode.getEnum().size(), 0);
-        assertEquals(packageNode.getInterface().size(), 1);
-        assertEquals(packageNode.getClazz().size(), 0);
+        assertEquals(getSimpledataPackage(), packageNode.getName());
+        assertEquals(0, packageNode.getAnnotation().size());
+        assertEquals(0, packageNode.getEnum().size());
+        assertEquals(1, packageNode.getInterface().size());
+        assertEquals(0, packageNode.getClazz().size());
 
-        assertEquals(interfaceNode.getComment(), "Interface4");
-        assertEquals(interfaceNode.getName(), Interface4.class.getSimpleName());
-        assertEquals(interfaceNode.getQualified(), Interface4.class.getName());
-        assertEquals(interfaceNode.getScope(), "public");
-        assertEquals(interfaceNode.getMethod().size(), 0);
-        assertEquals(interfaceNode.getAnnotation().size(), 1);
-        assertEquals(interfaceNode.getInterface().size(), 0);
+        assertEquals("Interface4", interfaceNode.getComment());
+        assertEquals(Interface4.class.getSimpleName(), interfaceNode.getName());
+        assertEquals(Interface4.class.getName(), interfaceNode.getQualified());
+        assertEquals("public", interfaceNode.getScope());
+        assertEquals(0, interfaceNode.getMethod().size());
+        assertEquals(1, interfaceNode.getAnnotation().size());
+        assertEquals(0, interfaceNode.getInterface().size());
         assertTrue(interfaceNode.isIncluded());
 
         // verify deprecated annotation
         // test annotation 'deprecated' on class
-        assertEquals(annotationInstanceNode.getQualified(), "java.lang.Deprecated");
-        assertEquals(annotationInstanceNode.getName(), "Deprecated");
-        assertEquals(annotationInstanceNode.getArgument().size(), 0);
+        assertEquals("java.lang.Deprecated", annotationInstanceNode.getQualified());
+        assertEquals("Deprecated", annotationInstanceNode.getName());
+        assertEquals(0, annotationInstanceNode.getArgument().size());
     }
 
     /**
@@ -190,39 +190,39 @@ public class InterfaceTest extends AbstractTestParent {
         Interface interfaceNode = packageNode.getInterface().get(0);
         Method method = interfaceNode.getMethod().get(0);
 
-        assertEquals(rootNode.getPackage().size(), 1);
+        assertEquals(1, rootNode.getPackage().size());
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), getSimpledataPackage());
-        assertEquals(packageNode.getAnnotation().size(), 0);
-        assertEquals(packageNode.getEnum().size(), 0);
-        assertEquals(packageNode.getInterface().size(), 1);
-        assertEquals(packageNode.getClazz().size(), 0);
+        assertEquals(getSimpledataPackage(), packageNode.getName());
+        assertEquals(0, packageNode.getAnnotation().size());
+        assertEquals(0, packageNode.getEnum().size());
+        assertEquals(1, packageNode.getInterface().size());
+        assertEquals(0, packageNode.getClazz().size());
 
-        assertEquals(interfaceNode.getComment(), "Interface5");
-        assertEquals(interfaceNode.getName(), "Interface5");
-        assertEquals(interfaceNode.getQualified(), getSimpledataPackage() + ".Interface5");
-        assertEquals(interfaceNode.getScope(), "");
-        assertEquals(interfaceNode.getMethod().size(), 1);
-        assertEquals(interfaceNode.getAnnotation().size(), 0);
-        assertEquals(interfaceNode.getInterface().size(), 0);
+        assertEquals("Interface5", interfaceNode.getComment());
+        assertEquals("Interface5", interfaceNode.getName());
+        assertEquals(getSimpledataPackage() + ".Interface5", interfaceNode.getQualified());
+        assertEquals("", interfaceNode.getScope());
+        assertEquals(1, interfaceNode.getMethod().size());
+        assertEquals(0, interfaceNode.getAnnotation().size());
+        assertEquals(0, interfaceNode.getInterface().size());
         assertTrue(interfaceNode.isIncluded());
 
         // verify method
-        assertEquals(method.getComment(), "method1");
-        assertEquals(method.getName(), "method1");
-        assertEquals(method.getSignature(), "()");
+        assertEquals("method1", method.getComment());
+        assertEquals("method1", method.getName());
+        assertEquals("()", method.getSignature());
         assertFalse(method.isFinal());
         assertFalse(method.isNative());
         assertFalse(method.isStatic());
         assertFalse(method.isSynchronized());
         assertFalse(method.isVarArgs());
-        assertEquals(method.getQualified(), getSimpledataPackage() + ".Interface5.method1");
+        assertEquals(getSimpledataPackage() + ".Interface5.method1", method.getQualified());
 
         // all interface methods are public
-        assertEquals(method.getScope(), "public");
-        assertEquals(method.getAnnotation().size(), 0);
-        assertEquals(method.getParameter().size(), 0);
-        assertEquals(method.getException().size(), 0);
+        assertEquals("public", method.getScope());
+        assertEquals(0, method.getAnnotation().size());
+        assertEquals(0, method.getParameter().size());
+        assertEquals(0, method.getException().size());
     }
 
     /**
@@ -237,25 +237,25 @@ public class InterfaceTest extends AbstractTestParent {
         Interface interfaceNode = packageNode.getInterface().get(0);
         TypeParameter typeParameterNode = interfaceNode.getGeneric().get(0);
 
-        assertEquals(rootNode.getPackage().size(), 1);
+        assertEquals(1, rootNode.getPackage().size());
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), getSimpledataPackage());
-        assertEquals(packageNode.getAnnotation().size(), 0);
-        assertEquals(packageNode.getEnum().size(), 0);
-        assertEquals(packageNode.getInterface().size(), 1);
-        assertEquals(packageNode.getClazz().size(), 0);
+        assertEquals(getSimpledataPackage(), packageNode.getName());
+        assertEquals(0, packageNode.getAnnotation().size());
+        assertEquals(0, packageNode.getEnum().size());
+        assertEquals(1, packageNode.getInterface().size());
+        assertEquals(0, packageNode.getClazz().size());
 
-        assertEquals(interfaceNode.getComment(), "Interface6");
-        assertEquals(interfaceNode.getName(), "Interface6");
-        assertEquals(interfaceNode.getQualified(), getSimpledataPackage() + ".Interface6");
-        assertEquals(interfaceNode.getScope(), "public");
-        assertEquals(interfaceNode.getMethod().size(), 0);
-        assertEquals(interfaceNode.getAnnotation().size(), 0);
-        assertEquals(interfaceNode.getInterface().size(), 0);
+        assertEquals("Interface6", interfaceNode.getComment());
+        assertEquals("Interface6", interfaceNode.getName());
+        assertEquals(getSimpledataPackage() + ".Interface6", interfaceNode.getQualified());
+        assertEquals("public", interfaceNode.getScope());
+        assertEquals(0, interfaceNode.getMethod().size());
+        assertEquals(0, interfaceNode.getAnnotation().size());
+        assertEquals(0, interfaceNode.getInterface().size());
         assertTrue(interfaceNode.isIncluded());
 
-        assertEquals(typeParameterNode.getName(), "Fun");
-        assertEquals(typeParameterNode.getBound().size(), 0);
+        assertEquals("Fun", typeParameterNode.getName());
+        assertEquals(0, typeParameterNode.getBound().size());
     }
 
     /**
@@ -270,25 +270,25 @@ public class InterfaceTest extends AbstractTestParent {
         Interface interfaceNode = packageNode.getInterface().get(0);
         TypeParameter typeParameterNode = interfaceNode.getGeneric().get(0);
 
-        assertEquals(rootNode.getPackage().size(), 1);
+        assertEquals(1, rootNode.getPackage().size());
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), getSimpledataPackage());
-        assertEquals(packageNode.getAnnotation().size(), 0);
-        assertEquals(packageNode.getEnum().size(), 0);
-        assertEquals(packageNode.getInterface().size(), 1);
-        assertEquals(packageNode.getClazz().size(), 0);
+        assertEquals(getSimpledataPackage(), packageNode.getName());
+        assertEquals(0, packageNode.getAnnotation().size());
+        assertEquals(0, packageNode.getEnum().size());
+        assertEquals(1, packageNode.getInterface().size());
+        assertEquals(0, packageNode.getClazz().size());
 
-        assertEquals(interfaceNode.getComment(), "Interface7");
-        assertEquals(interfaceNode.getName(), "Interface7");
-        assertEquals(interfaceNode.getQualified(), getSimpledataPackage() + ".Interface7");
-        assertEquals(interfaceNode.getScope(), "public");
-        assertEquals(interfaceNode.getMethod().size(), 0);
-        assertEquals(interfaceNode.getAnnotation().size(), 0);
-        assertEquals(interfaceNode.getInterface().size(), 0);
+        assertEquals("Interface7", interfaceNode.getComment());
+        assertEquals("Interface7", interfaceNode.getName());
+        assertEquals(getSimpledataPackage() + ".Interface7", interfaceNode.getQualified());
+        assertEquals("public", interfaceNode.getScope());
+        assertEquals(0, interfaceNode.getMethod().size());
+        assertEquals(0, interfaceNode.getAnnotation().size());
+        assertEquals(0, interfaceNode.getInterface().size());
         assertTrue(interfaceNode.isIncluded());
 
-        assertEquals(typeParameterNode.getBound().size(), 1);
-        assertEquals(typeParameterNode.getBound().get(0), "java.lang.Number");
+        assertEquals(1, typeParameterNode.getBound().size());
+        assertEquals("java.lang.Number", typeParameterNode.getBound().get(0));
     }
 
     /**
@@ -304,25 +304,25 @@ public class InterfaceTest extends AbstractTestParent {
         Interface interfaceNode = packageNode.getInterface().get(0);
         TypeParameter typeParameterNode = interfaceNode.getGeneric().get(0);
 
-        assertEquals(rootNode.getPackage().size(), 1);
+        assertEquals(1, rootNode.getPackage().size());
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), getSimpledataPackage());
-        assertEquals(packageNode.getAnnotation().size(), 0);
-        assertEquals(packageNode.getEnum().size(), 0);
-        assertEquals(packageNode.getInterface().size(), 1);
-        assertEquals(packageNode.getClazz().size(), 0);
+        assertEquals(getSimpledataPackage(), packageNode.getName());
+        assertEquals(0, packageNode.getAnnotation().size());
+        assertEquals(0, packageNode.getEnum().size());
+        assertEquals(1, packageNode.getInterface().size());
+        assertEquals(0, packageNode.getClazz().size());
 
-        assertEquals(interfaceNode.getComment(), "Interface8");
-        assertEquals(interfaceNode.getName(), "Interface8");
-        assertEquals(interfaceNode.getQualified(), getSimpledataPackage() + ".Interface8");
-        assertEquals(interfaceNode.getScope(), "public");
-        assertEquals(interfaceNode.getMethod().size(), 0);
-        assertEquals(interfaceNode.getAnnotation().size(), 0);
-        assertEquals(interfaceNode.getInterface().size(), 0);
+        assertEquals("Interface8", interfaceNode.getComment());
+        assertEquals("Interface8", interfaceNode.getName());
+        assertEquals(getSimpledataPackage() + ".Interface8", interfaceNode.getQualified());
+        assertEquals("public", interfaceNode.getScope());
+        assertEquals(0, interfaceNode.getMethod().size());
+        assertEquals(0, interfaceNode.getAnnotation().size());
+        assertEquals(0, interfaceNode.getInterface().size());
         assertTrue(interfaceNode.isIncluded());
 
-        assertEquals(typeParameterNode.getBound().size(), 2);
-        assertEquals(typeParameterNode.getBound().get(0), "java.lang.Number");
-        assertEquals(typeParameterNode.getBound().get(1), "java.lang.Runnable");
+        assertEquals(2, typeParameterNode.getBound().size());
+        assertEquals("java.lang.Number", typeParameterNode.getBound().get(0));
+        assertEquals("java.lang.Runnable", typeParameterNode.getBound().get(1));
     }
 }

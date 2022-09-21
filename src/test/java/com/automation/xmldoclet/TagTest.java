@@ -26,16 +26,16 @@ public class TagTest extends AbstractTestParent {
         Package packageNode = rootNode.getPackage().get(0);
         Class classNode = packageNode.getClazz().get(0);
 
-        assertEquals(rootNode.getPackage().size(), 1);
+        assertEquals(1, rootNode.getPackage().size());
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), getSimpledataPackage());
-        assertEquals(packageNode.getAnnotation().size(), 0);
-        assertEquals(packageNode.getEnum().size(), 0);
-        assertEquals(packageNode.getInterface().size(), 0);
-        assertEquals(packageNode.getClazz().size(), 1);
+        assertEquals(getSimpledataPackage(), packageNode.getName());
+        assertEquals(0, packageNode.getAnnotation().size());
+        assertEquals(0, packageNode.getEnum().size());
+        assertEquals(0, packageNode.getInterface().size());
+        assertEquals(1, packageNode.getClazz().size());
 
-        assertEquals(classNode.getTag().size(), 7);
-        assertEquals(classNode.getMethod().get(0).getTag().size(), 3);
+        assertEquals(7, classNode.getTag().size());
+        assertEquals(3, classNode.getMethod().get(0).getTag().size());
     }
 
 }

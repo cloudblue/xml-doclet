@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @SuppressWarnings("deprecation")
 public class AnnotationTest extends AbstractTestParent {
+
     /**
      * Rigorous Parser :-)
      */
@@ -39,20 +40,20 @@ public class AnnotationTest extends AbstractTestParent {
         Package packageNode = rootNode.getPackage().get(0);
         Annotation annotationNode = packageNode.getAnnotation().get(0);
 
-        assertEquals(rootNode.getPackage().size(), 1);
+        assertEquals(1, rootNode.getPackage().size());
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), getSimpledataPackage());
-        assertEquals(packageNode.getAnnotation().size(), 1);
-        assertEquals(packageNode.getEnum().size(), 0);
-        assertEquals(packageNode.getInterface().size(), 0);
-        assertEquals(packageNode.getClazz().size(), 0);
+        assertEquals(getSimpledataPackage(), packageNode.getName());
+        assertEquals(1, packageNode.getAnnotation().size());
+        assertEquals(0, packageNode.getEnum().size());
+        assertEquals(0, packageNode.getInterface().size());
+        assertEquals(0, packageNode.getClazz().size());
 
-        assertEquals(annotationNode.getComment(), "Annotation1");
-        assertEquals(annotationNode.getName(), Annotation1.class.getSimpleName());
-        assertEquals(annotationNode.getQualified(), Annotation1.class.getName());
-        assertEquals(annotationNode.getScope(), "public");
-        assertEquals(annotationNode.getAnnotation().size(), 0);
-        assertEquals(annotationNode.getElement().size(), 0);
+        assertEquals("Annotation1", annotationNode.getComment());
+        assertEquals(Annotation1.class.getSimpleName(), annotationNode.getName());
+        assertEquals(Annotation1.class.getName(), annotationNode.getQualified());
+        assertEquals("public", annotationNode.getScope());
+        assertEquals(0, annotationNode.getAnnotation().size());
+        assertEquals(0, annotationNode.getElement().size());
         assertTrue(annotationNode.isIncluded());
     }
 
@@ -68,26 +69,26 @@ public class AnnotationTest extends AbstractTestParent {
         Annotation annotationNode = packageNode.getAnnotation().get(0);
         AnnotationInstance annotationInstance = annotationNode.getAnnotation().get(0);
 
-        assertEquals(rootNode.getPackage().size(), 1);
+        assertEquals(1, rootNode.getPackage().size());
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), getSimpledataPackage());
-        assertEquals(packageNode.getAnnotation().size(), 1);
-        assertEquals(packageNode.getEnum().size(), 0);
-        assertEquals(packageNode.getInterface().size(), 0);
-        assertEquals(packageNode.getClazz().size(), 0);
+        assertEquals(getSimpledataPackage(), packageNode.getName());
+        assertEquals(1, packageNode.getAnnotation().size());
+        assertEquals(0, packageNode.getEnum().size());
+        assertEquals(0, packageNode.getInterface().size());
+        assertEquals(0, packageNode.getClazz().size());
 
-        assertEquals(annotationNode.getComment(), "Annotation2");
-        assertEquals(annotationNode.getName(), Annotation2.class.getSimpleName());
-        assertEquals(annotationNode.getQualified(), Annotation2.class.getName());
-        assertEquals(annotationNode.getScope(), "public");
-        assertEquals(annotationNode.getAnnotation().size(), 1);
-        assertEquals(annotationNode.getElement().size(), 0);
+        assertEquals("Annotation2", annotationNode.getComment());
+        assertEquals(Annotation2.class.getSimpleName(), annotationNode.getName());
+        assertEquals(Annotation2.class.getName(), annotationNode.getQualified());
+        assertEquals("public", annotationNode.getScope());
+        assertEquals(1, annotationNode.getAnnotation().size());
+        assertEquals(0, annotationNode.getElement().size());
         assertTrue(annotationNode.isIncluded());
 
         // test annotation 'deprecated' on class
-        assertEquals(annotationInstance.getQualified(), "java.lang.Deprecated");
-        assertEquals(annotationInstance.getName(), "Deprecated");
-        assertEquals(annotationInstance.getArgument().size(), 0);
+        assertEquals("java.lang.Deprecated", annotationInstance.getQualified());
+        assertEquals("Deprecated", annotationInstance.getName());
+        assertEquals(0, annotationInstance.getArgument().size());
     }
 
     /**
@@ -102,27 +103,27 @@ public class AnnotationTest extends AbstractTestParent {
         Annotation annotationNode = packageNode.getAnnotation().get(0);
         AnnotationElement element = annotationNode.getElement().get(0);
 
-        assertEquals(rootNode.getPackage().size(), 1);
+        assertEquals(1, rootNode.getPackage().size());
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), getSimpledataPackage());
-        assertEquals(packageNode.getAnnotation().size(), 1);
-        assertEquals(packageNode.getEnum().size(), 0);
-        assertEquals(packageNode.getInterface().size(), 0);
-        assertEquals(packageNode.getClazz().size(), 0);
+        assertEquals(getSimpledataPackage(), packageNode.getName());
+        assertEquals(1, packageNode.getAnnotation().size());
+        assertEquals(0, packageNode.getEnum().size());
+        assertEquals(0, packageNode.getInterface().size());
+        assertEquals(0, packageNode.getClazz().size());
 
-        assertEquals(annotationNode.getComment(), "Annotation3");
-        assertEquals(annotationNode.getName(), Annotation3.class.getSimpleName());
-        assertEquals(annotationNode.getQualified(), Annotation3.class.getName());
-        assertEquals(annotationNode.getScope(), "public");
-        assertEquals(annotationNode.getAnnotation().size(), 0);
-        assertEquals(annotationNode.getElement().size(), 1);
+        assertEquals("Annotation3", annotationNode.getComment());
+        assertEquals(Annotation3.class.getSimpleName(), annotationNode.getName());
+        assertEquals(Annotation3.class.getName(), annotationNode.getQualified());
+        assertEquals("public", annotationNode.getScope());
+        assertEquals(0, annotationNode.getAnnotation().size());
+        assertEquals(1, annotationNode.getElement().size());
         assertTrue(annotationNode.isIncluded());
 
         // test annotation element
-        assertEquals(element.getName(), "id");
-        assertEquals(element.getQualified(), getSimpledataPackage() + ".Annotation3.id");
-        assertEquals(element.getType().getQualified(), "int");
-        assertEquals(element.getDefault(), Integer.toString(3));
+        assertEquals("id", element.getName());
+        assertEquals(getSimpledataPackage() + ".Annotation3.id", element.getQualified());
+        assertEquals("int", element.getType().getQualified());
+        assertEquals(Integer.toString(3), element.getDefault());
     }
 
     /**
@@ -136,20 +137,20 @@ public class AnnotationTest extends AbstractTestParent {
         Package packageNode = rootNode.getPackage().get(0);
         Annotation annotationNode = packageNode.getAnnotation().get(0);
 
-        assertEquals(rootNode.getPackage().size(), 1);
+        assertEquals(1, rootNode.getPackage().size());
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), getSimpledataPackage());
-        assertEquals(packageNode.getAnnotation().size(), 1);
-        assertEquals(packageNode.getEnum().size(), 0);
-        assertEquals(packageNode.getInterface().size(), 0);
-        assertEquals(packageNode.getClazz().size(), 0);
+        assertEquals(getSimpledataPackage(), packageNode.getName());
+        assertEquals(1, packageNode.getAnnotation().size());
+        assertEquals(0, packageNode.getEnum().size());
+        assertEquals(0, packageNode.getInterface().size());
+        assertEquals(0, packageNode.getClazz().size());
 
-        assertEquals(annotationNode.getComment(), "Annotation4");
-        assertEquals(annotationNode.getName(), "Annotation4");
-        assertEquals(annotationNode.getQualified(), getSimpledataPackage() + ".Annotation4");
-        assertEquals(annotationNode.getScope(), "");
-        assertEquals(annotationNode.getAnnotation().size(), 0);
-        assertEquals(annotationNode.getElement().size(), 0);
+        assertEquals("Annotation4", annotationNode.getComment());
+        assertEquals("Annotation4", annotationNode.getName());
+        assertEquals(getSimpledataPackage() + ".Annotation4", annotationNode.getQualified());
+        assertEquals("", annotationNode.getScope());
+        assertEquals(0, annotationNode.getAnnotation().size());
+        assertEquals(0, annotationNode.getElement().size());
         assertTrue(annotationNode.isIncluded());
     }
 }

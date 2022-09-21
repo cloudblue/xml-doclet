@@ -44,21 +44,21 @@ public class EnumTest extends AbstractTestParent {
         Package packageNode = rootNode.getPackage().get(0);
         Enum enumNode = packageNode.getEnum().get(0);
 
-        assertEquals(rootNode.getPackage().size(), 1);
+        assertEquals(1, rootNode.getPackage().size());
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), getSimpledataPackage());
-        assertEquals(packageNode.getAnnotation().size(), 0);
-        assertEquals(packageNode.getEnum().size(), 1);
-        assertEquals(packageNode.getInterface().size(), 0);
-        assertEquals(packageNode.getClazz().size(), 0);
+        assertEquals(getSimpledataPackage(), packageNode.getName());
+        assertEquals(0, packageNode.getAnnotation().size());
+        assertEquals(1, packageNode.getEnum().size());
+        assertEquals(0, packageNode.getInterface().size());
+        assertEquals(0, packageNode.getClazz().size());
 
-        assertEquals(enumNode.getName(), "Enum1");
-        assertEquals(enumNode.getComment(), "Enum1");
-        assertEquals(enumNode.getQualified(), getSimpledataPackage() + ".Enum1");
-        assertEquals(enumNode.getConstant().size(), 3);
-        assertEquals(enumNode.getConstant().get(0).getName(), "a");
-        assertEquals(enumNode.getConstant().get(1).getName(), "b");
-        assertEquals(enumNode.getConstant().get(2).getName(), "c");
+        assertEquals("Enum1", enumNode.getName());
+        assertEquals("Enum1", enumNode.getComment());
+        assertEquals(getSimpledataPackage() + ".Enum1", enumNode.getQualified());
+        assertEquals(3, enumNode.getConstant().size());
+        assertEquals("a", enumNode.getConstant().get(0).getName());
+        assertEquals("b", enumNode.getConstant().get(1).getName());
+        assertEquals("c", enumNode.getConstant().get(2).getName());
     }
 
     /**
@@ -72,10 +72,10 @@ public class EnumTest extends AbstractTestParent {
         Package packageNode = rootNode.getPackage().get(0);
         Enum enumNode = packageNode.getEnum().get(0);
 
-        assertEquals(enumNode.getName(), "Enum2");
-        assertEquals(enumNode.getComment(), "Enum2");
-        assertEquals(enumNode.getQualified(), getSimpledataPackage() + ".Enum2");
-        assertEquals(enumNode.getConstant().size(), 0);
+        assertEquals("Enum2", enumNode.getName());
+        assertEquals("Enum2", enumNode.getComment());
+        assertEquals(getSimpledataPackage() + ".Enum2", enumNode.getQualified());
+        assertEquals(0, enumNode.getConstant().size());
     }
 
     /**
@@ -88,7 +88,7 @@ public class EnumTest extends AbstractTestParent {
 
         Package packageNode = rootNode.getPackage().get(0);
         Enum enumNode = packageNode.getEnum().get(0);
-        assertEquals(enumNode.getComment(), "Enum3");
+        assertEquals("Enum3", enumNode.getComment());
     }
 
     /**
@@ -103,7 +103,7 @@ public class EnumTest extends AbstractTestParent {
         Enum enumNode = packageNode.getEnum().get(0);
 
         EnumConstant enumConstantNode = enumNode.getConstant().get(0);
-        assertEquals(enumConstantNode.getComment(), "field1");
+        assertEquals("field1", enumConstantNode.getComment());
     }
 
     /**
@@ -116,9 +116,9 @@ public class EnumTest extends AbstractTestParent {
 
         Package packageNode = rootNode.getPackage().get(0);
         Enum enumNode = packageNode.getEnum().get(0);
-        assertEquals(enumNode.getAnnotation().size(), 1);
+        assertEquals(1, enumNode.getAnnotation().size());
         AnnotationInstance annotationInstanceNode = enumNode.getAnnotation().get(0);
-        assertEquals(annotationInstanceNode.getQualified(), "java.lang.Deprecated");
+        assertEquals("java.lang.Deprecated", annotationInstanceNode.getQualified());
     }
 
     /**
@@ -131,21 +131,21 @@ public class EnumTest extends AbstractTestParent {
 
         Package packageNode = rootNode.getPackage().get(0);
         Enum enumNode = packageNode.getEnum().get(0);
-        assertEquals(enumNode.getAnnotation().size(), 2);
+        assertEquals(2, enumNode.getAnnotation().size());
 
         AnnotationInstance annotationInstanceNode = enumNode.getAnnotation().get(0);
-        assertEquals(annotationInstanceNode.getQualified(), "java.lang.Deprecated");
-        assertEquals(annotationInstanceNode.getName(), "Deprecated");
-        assertEquals(annotationInstanceNode.getArgument().size(), 0);
+        assertEquals("java.lang.Deprecated", annotationInstanceNode.getQualified());
+        assertEquals("Deprecated", annotationInstanceNode.getName());
+        assertEquals(0, annotationInstanceNode.getArgument().size());
 
         annotationInstanceNode = enumNode.getAnnotation().get(1);
-        assertEquals(annotationInstanceNode.getQualified(), Annotation12.class.getName());
-        assertEquals(annotationInstanceNode.getName(), Annotation12.class.getSimpleName());
-        assertEquals(annotationInstanceNode.getArgument().size(), 1);
+        assertEquals(Annotation12.class.getName(), annotationInstanceNode.getQualified());
+        assertEquals(Annotation12.class.getSimpleName(), annotationInstanceNode.getName());
+        assertEquals(1, annotationInstanceNode.getArgument().size());
 
         AnnotationArgument annotationArgumentNode = annotationInstanceNode.getArgument().get(0);
-        assertEquals(annotationArgumentNode.getName(), "value");
-        assertEquals(annotationArgumentNode.getValue().get(0), "mister");
+        assertEquals("value", annotationArgumentNode.getName());
+        assertEquals("mister", annotationArgumentNode.getValue().get(0));
 
     }
 

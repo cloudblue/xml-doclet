@@ -30,7 +30,6 @@ public class AnnotatedParameterTest extends AbstractTestParent {
         assertEquals("java.util.Map", getParamType(methodNode, 4).getQualified());
         assertEquals("[]", getParamType(methodNode, 5).getDimension());
 
-
         assertEquals("(java.lang.String, java.util.List<java.lang.String>, java.lang.String..., char, java.util.Map<java.lang.String,java.lang.Integer>, java.lang.String...)", methodNode.getSignature());
     }
 
