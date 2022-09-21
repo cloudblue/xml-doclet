@@ -75,7 +75,7 @@
 				<configuration>
 					<cleanPackageDirectories>true</cleanPackageDirectories>
 					<extension>true</extension>
-					<generatePackage>com.github.markusbernhardt.xmldoclet.xjc</generatePackage>
+					<generatePackage>com.automation.xmldoclet.xjc</generatePackage>
 					<schemaDirectory>src/main/xjc</schemaDirectory>
 					<strict>false</strict>
 				</configuration>

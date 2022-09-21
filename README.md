@@ -24,13 +24,13 @@ If you are using maven you can use this library by adding the following report t
     							<goal>javadoc</goal>
     						</goals>
     						<configuration>
-    							<doclet>com.github.markusbernhardt.xmldoclet.XmlDoclet</doclet>
+    							<doclet>com.automation.xmldoclet.XmlDoclet</doclet>
     							<additionalparam>-d ${project.build.directory} -filename ${project.artifactId}-${project.version}-javadoc.xml</additionalparam>
     							<useStandardDocletOptions>false</useStandardDocletOptions>
     							<docletArtifact>
-    								<groupId>com.github.markusbernhardt</groupId>
+    								<groupId>com.automation</groupId>
     								<artifactId>xml-doclet</artifactId>
-    								<version>1.0.5</version>
+    								<version>2.0.0</version>
     							</docletArtifact>
     						</configuration>
 						</execution>
@@ -40,10 +40,10 @@ If you are using maven you can use this library by adding the following report t
     </project>
     
 Use 'mvn package' with maven.
-If you are not using maven, you can use the [jar-with-dependencies](http://search.maven.org/remotecontent?filepath=com/github/markusbernhardt/xml-doclet/1.0.5/xml-doclet-1.0.5-jar-with-dependencies.jar), which contains all required libraries.
+If you are not using maven, you can use the [jar-with-dependencies](), which contains all required libraries.
 
-    javadoc -doclet com.github.markusbernhardt.xmldoclet.XmlDoclet \
-    -docletpath xml-doclet-1.0.5-jar-with-dependencies.jar \
+    javadoc -doclet com.automation.xmldoclet.XmlDoclet \
+    -docletpath xml-doclet-2.0.0-jar-with-dependencies.jar \
     [Javadoc- and XmlDoclet-Options]
 
 A Makefile target to generate xml from both the production and test code:
@@ -52,11 +52,11 @@ A Makefile target to generate xml from both the production and test code:
     javadoc:
 	mkdir -p target/production target/test
 	CLASSPATH=$$(echo $$(find ~/.m2/repository/ -name '*.jar'|grep -v jdk14 )|sed 's/ /:/g')\
-     javadoc -doclet com.github.markusbernhardt.xmldoclet.XmlDoclet -sourcepath src/main/java -d target/production org.rulez.demokracia.PDEngine
+     javadoc -doclet com.automation.xmldoclet.XmlDoclet -sourcepath src/main/java -d target/production org.rulez.demokracia.PDEngine
 	CLASSPATH=$$(echo $$(find ~/.m2/repository/ -name '*.jar'|grep -v jdk14 )|sed 's/ /:/g')\
-     javadoc -doclet com.github.markusbernhardt.xmldoclet.XmlDoclet -sourcepath src/test/java -d target/test org.rulez.demokracia.PDEngine
+     javadoc -doclet com.automation.xmldoclet.XmlDoclet -sourcepath src/test/java -d target/test org.rulez.demokracia.PDEngine
 
-If you want more control and feel adventurous you could you use this [jar](http://search.maven.org/remotecontent?filepath=com/github/markusbernhardt/xml-doclet/1.0.5/xml-doclet-1.0.5.jar) and provide all required libraries from this [list](DEPENDENCIES.md) on your own.
+If you want more control and feel adventurous you could you use this [jar]() and provide all required libraries from this [list](DEPENDENCIES.md) on your own.
 
 Options
 -------
