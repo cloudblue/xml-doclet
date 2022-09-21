@@ -7,12 +7,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class AnnotatedParameterTest extends AbstractTestParent{
+public class AnnotatedParameterTest extends AbstractTestParent {
 
     @Test
     public void testAnnotatedParameter() {
-        String[] sourceFiles = new String[] { "./src/test/java/com/automation/xmldoclet/simpledata/AnnotatedParameter.java" };
-        Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] { "-dryrun" });
+        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/AnnotatedParameter.java"};
+        Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Method methodNode = rootNode
             .getPackage().get(0)

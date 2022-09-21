@@ -2,7 +2,7 @@ package com.automation.xmldoclet.simpledata;
 
 /**
  * Class14
- * 
+ *
  * @param <Fun>
  *            Generic class
  */

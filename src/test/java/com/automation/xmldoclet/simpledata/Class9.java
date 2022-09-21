@@ -9,13 +9,13 @@ import java.io.ObjectOutput;
  */
 public class Class9 implements java.io.Externalizable {
 
-	public void writeExternal(ObjectOutput out) throws IOException {
-		// To change body of implemented methods use File | Settings | File
-		// Templates.
-	}
+    public void writeExternal(ObjectOutput out) throws IOException {
+        // To change body of implemented methods use File | Settings | File
+        // Templates.
+    }
 
-	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-		// To change body of implemented methods use File | Settings | File
-		// Templates.
-	}
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        // To change body of implemented methods use File | Settings | File
+        // Templates.
+    }
 }

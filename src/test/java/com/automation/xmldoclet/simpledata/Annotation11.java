@@ -4,10 +4,10 @@ package com.automation.xmldoclet.simpledata;
  * Annotation11
  */
 @interface Annotation11 {
-	/**
-	 * id
-	 * 
-	 * @return ret
-	 */
-	public abstract boolean id();
+    /**
+     * id
+     *
+     * @return ret
+     */
+    public abstract boolean id();
 }

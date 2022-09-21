@@ -3,7 +3,7 @@ package com.automation.xmldoclet.simpledata;
 /**
  * Class17
  */
-@Annotation5(id = { 1, 2 })
+@Annotation5(id = {1, 2})
 public class Class17 {
 
 }

@@ -2,26 +2,26 @@ package com.automation.xmldoclet.simpledata;
 
 /**
  * Tag1
- * 
+ *
  * @author author
- * @deprecated deprecated
- * @category category
- * @see java.lang.Object
- * @serial serial
- * @since since
  * @version version
+ * @category category
+ * @serial serial
+ * @see java.lang.Object
+ * @since since
+ * @deprecated deprecated
  */
 public class Tag1 {
-	/**
-	 * The famous <code>foo</code> method.
-	 * 
-	 * @param bar
-	 *            bar
-	 * @return object
-	 * @throws NullPointerException
-	 *             exception
-	 */
-	public Object foo(Object bar) {
-		return "";
-	}
+    /**
+     * The famous <code>foo</code> method.
+     *
+     * @param bar
+     *            bar
+     * @return object
+     * @throws NullPointerException
+     *             exception
+     */
+    public Object foo(Object bar) {
+        return "";
+    }
 }
