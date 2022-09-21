@@ -1,6 +1,9 @@
 package com.automation.xmldoclet;
 
 import com.automation.xmldoclet.simpledata.Annotation12;
+import com.automation.xmldoclet.simpledata.Method1;
+import com.automation.xmldoclet.simpledata.Method2;
+import com.automation.xmldoclet.simpledata.Method3;
 import com.automation.xmldoclet.xjc.AnnotationArgument;
 import com.automation.xmldoclet.xjc.AnnotationInstance;
 import com.automation.xmldoclet.xjc.Class;
@@ -40,7 +43,7 @@ public class MethodTest extends AbstractTestParent {
      */
     @Test
     public void testMethod1() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Method1.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Method1.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -75,7 +78,7 @@ public class MethodTest extends AbstractTestParent {
      */
     @Test
     public void testMethod2() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Method2.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Method2.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -263,7 +266,7 @@ public class MethodTest extends AbstractTestParent {
      */
     @Test
     public void testMethod3() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Method3.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Method3.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);

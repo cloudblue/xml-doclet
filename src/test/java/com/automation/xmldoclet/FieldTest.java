@@ -1,6 +1,7 @@
 package com.automation.xmldoclet;
 
 import com.automation.xmldoclet.simpledata.Annotation12;
+import com.automation.xmldoclet.simpledata.Field1;
 import com.automation.xmldoclet.xjc.AnnotationArgument;
 import com.automation.xmldoclet.xjc.AnnotationInstance;
 import com.automation.xmldoclet.xjc.Class;
@@ -37,7 +38,7 @@ public class FieldTest extends AbstractTestParent {
      */
     @Test
     public void testMethod1() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Field1.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Field1.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -46,7 +47,7 @@ public class FieldTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);

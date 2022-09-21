@@ -1,6 +1,12 @@
 package com.automation.xmldoclet;
 
 import com.automation.xmldoclet.simpledata.Annotation12;
+import com.automation.xmldoclet.simpledata.Enum1;
+import com.automation.xmldoclet.simpledata.Enum2;
+import com.automation.xmldoclet.simpledata.Enum3;
+import com.automation.xmldoclet.simpledata.Enum4;
+import com.automation.xmldoclet.simpledata.Enum5;
+import com.automation.xmldoclet.simpledata.Enum6;
 import com.automation.xmldoclet.xjc.AnnotationArgument;
 import com.automation.xmldoclet.xjc.AnnotationInstance;
 import com.automation.xmldoclet.xjc.Enum;
@@ -31,7 +37,7 @@ public class EnumTest extends AbstractTestParent {
      */
     @Test
     public void testEnum1() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Enum1.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Enum1.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -39,7 +45,7 @@ public class EnumTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 1);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -47,7 +53,7 @@ public class EnumTest extends AbstractTestParent {
 
         assertEquals(enumNode.getName(), "Enum1");
         assertEquals(enumNode.getComment(), "Enum1");
-        assertEquals(enumNode.getQualified(), "com.automation.xmldoclet.simpledata.Enum1");
+        assertEquals(enumNode.getQualified(), getSimpledataPackage() + ".Enum1");
         assertEquals(enumNode.getConstant().size(), 3);
         assertEquals(enumNode.getConstant().get(0).getName(), "a");
         assertEquals(enumNode.getConstant().get(1).getName(), "b");
@@ -59,7 +65,7 @@ public class EnumTest extends AbstractTestParent {
      */
     @Test
     public void testEnum2() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Enum2.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Enum2.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -67,7 +73,7 @@ public class EnumTest extends AbstractTestParent {
 
         assertEquals(enumNode.getName(), "Enum2");
         assertEquals(enumNode.getComment(), "Enum2");
-        assertEquals(enumNode.getQualified(), "com.automation.xmldoclet.simpledata.Enum2");
+        assertEquals(enumNode.getQualified(), getSimpledataPackage() + ".Enum2");
         assertEquals(enumNode.getConstant().size(), 0);
     }
 
@@ -76,7 +82,7 @@ public class EnumTest extends AbstractTestParent {
      */
     @Test
     public void testEnum3() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Enum3.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Enum3.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -89,7 +95,7 @@ public class EnumTest extends AbstractTestParent {
      */
     @Test
     public void testEnum4() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Enum4.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Enum4.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -104,7 +110,7 @@ public class EnumTest extends AbstractTestParent {
      */
     @Test
     public void testEnum5() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Enum5.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Enum5.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -119,7 +125,7 @@ public class EnumTest extends AbstractTestParent {
      */
     @Test
     public void testEnum6() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Enum6.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Enum6.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);

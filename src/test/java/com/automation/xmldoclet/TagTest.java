@@ -1,5 +1,6 @@
 package com.automation.xmldoclet;
 
+import com.automation.xmldoclet.simpledata.Tag1;
 import com.automation.xmldoclet.xjc.Class;
 import com.automation.xmldoclet.xjc.Package;
 import com.automation.xmldoclet.xjc.Root;
@@ -18,7 +19,7 @@ public class TagTest extends AbstractTestParent {
      */
     @Test
     public void testTag1() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Tag1.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Tag1.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -26,7 +27,7 @@ public class TagTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);

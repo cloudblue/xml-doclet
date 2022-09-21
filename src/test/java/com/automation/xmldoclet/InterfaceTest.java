@@ -4,6 +4,9 @@ import com.automation.xmldoclet.simpledata.Interface1;
 import com.automation.xmldoclet.simpledata.Interface2;
 import com.automation.xmldoclet.simpledata.Interface3;
 import com.automation.xmldoclet.simpledata.Interface4;
+import com.automation.xmldoclet.simpledata.Interface6;
+import com.automation.xmldoclet.simpledata.Interface7;
+import com.automation.xmldoclet.simpledata.Interface8;
 import com.automation.xmldoclet.xjc.AnnotationInstance;
 import com.automation.xmldoclet.xjc.Interface;
 import com.automation.xmldoclet.xjc.Method;
@@ -37,7 +40,7 @@ public class InterfaceTest extends AbstractTestParent {
      */
     @Test
     public void testInterface1() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Interface1.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Interface1.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -45,7 +48,7 @@ public class InterfaceTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 1);
@@ -66,7 +69,7 @@ public class InterfaceTest extends AbstractTestParent {
      */
     @Test
     public void testInterface2() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Interface2.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Interface2.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -75,7 +78,7 @@ public class InterfaceTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 1);
@@ -99,7 +102,7 @@ public class InterfaceTest extends AbstractTestParent {
         assertFalse(method.isStatic());
         assertFalse(method.isSynchronized());
         assertFalse(method.isVarArgs());
-        assertEquals(method.getQualified(), "com.automation.xmldoclet.simpledata.Interface2.method1");
+        assertEquals(method.getQualified(), getSimpledataPackage() + ".Interface2.method1");
         assertEquals(method.getScope(), "public");
         assertEquals(method.getAnnotation().size(), 0);
         assertEquals(method.getParameter().size(), 0);
@@ -112,7 +115,7 @@ public class InterfaceTest extends AbstractTestParent {
      */
     @Test
     public void testInterface3() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Interface3.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Interface3.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -120,7 +123,7 @@ public class InterfaceTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 1);
@@ -144,7 +147,7 @@ public class InterfaceTest extends AbstractTestParent {
      */
     @Test
     public void testInterface4() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Interface4.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Interface4.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -153,7 +156,7 @@ public class InterfaceTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 1);
@@ -180,7 +183,7 @@ public class InterfaceTest extends AbstractTestParent {
      */
     @Test
     public void testInterface5() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Interface5.java"};
+        String[] sourceFiles = new String[] {getSourceFile("Interface5")};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -189,7 +192,7 @@ public class InterfaceTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 1);
@@ -197,7 +200,7 @@ public class InterfaceTest extends AbstractTestParent {
 
         assertEquals(interfaceNode.getComment(), "Interface5");
         assertEquals(interfaceNode.getName(), "Interface5");
-        assertEquals(interfaceNode.getQualified(), "com.automation.xmldoclet.simpledata.Interface5");
+        assertEquals(interfaceNode.getQualified(), getSimpledataPackage() + ".Interface5");
         assertEquals(interfaceNode.getScope(), "");
         assertEquals(interfaceNode.getMethod().size(), 1);
         assertEquals(interfaceNode.getAnnotation().size(), 0);
@@ -213,7 +216,7 @@ public class InterfaceTest extends AbstractTestParent {
         assertFalse(method.isStatic());
         assertFalse(method.isSynchronized());
         assertFalse(method.isVarArgs());
-        assertEquals(method.getQualified(), "com.automation.xmldoclet.simpledata.Interface5.method1");
+        assertEquals(method.getQualified(), getSimpledataPackage() + ".Interface5.method1");
 
         // all interface methods are public
         assertEquals(method.getScope(), "public");
@@ -227,7 +230,7 @@ public class InterfaceTest extends AbstractTestParent {
      */
     @Test
     public void testInterface6() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Interface6.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Interface6.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -236,7 +239,7 @@ public class InterfaceTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 1);
@@ -244,7 +247,7 @@ public class InterfaceTest extends AbstractTestParent {
 
         assertEquals(interfaceNode.getComment(), "Interface6");
         assertEquals(interfaceNode.getName(), "Interface6");
-        assertEquals(interfaceNode.getQualified(), "com.automation.xmldoclet.simpledata.Interface6");
+        assertEquals(interfaceNode.getQualified(), getSimpledataPackage() + ".Interface6");
         assertEquals(interfaceNode.getScope(), "public");
         assertEquals(interfaceNode.getMethod().size(), 0);
         assertEquals(interfaceNode.getAnnotation().size(), 0);
@@ -260,7 +263,7 @@ public class InterfaceTest extends AbstractTestParent {
      */
     @Test
     public void testInterface7() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Interface7.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Interface7.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -269,7 +272,7 @@ public class InterfaceTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 1);
@@ -277,7 +280,7 @@ public class InterfaceTest extends AbstractTestParent {
 
         assertEquals(interfaceNode.getComment(), "Interface7");
         assertEquals(interfaceNode.getName(), "Interface7");
-        assertEquals(interfaceNode.getQualified(), "com.automation.xmldoclet.simpledata.Interface7");
+        assertEquals(interfaceNode.getQualified(), getSimpledataPackage() + ".Interface7");
         assertEquals(interfaceNode.getScope(), "public");
         assertEquals(interfaceNode.getMethod().size(), 0);
         assertEquals(interfaceNode.getAnnotation().size(), 0);
@@ -294,7 +297,7 @@ public class InterfaceTest extends AbstractTestParent {
      */
     @Test
     public void testInterface8() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Interface8.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Interface8.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -303,7 +306,7 @@ public class InterfaceTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 1);
@@ -311,7 +314,7 @@ public class InterfaceTest extends AbstractTestParent {
 
         assertEquals(interfaceNode.getComment(), "Interface8");
         assertEquals(interfaceNode.getName(), "Interface8");
-        assertEquals(interfaceNode.getQualified(), "com.automation.xmldoclet.simpledata.Interface8");
+        assertEquals(interfaceNode.getQualified(), getSimpledataPackage() + ".Interface8");
         assertEquals(interfaceNode.getScope(), "public");
         assertEquals(interfaceNode.getMethod().size(), 0);
         assertEquals(interfaceNode.getAnnotation().size(), 0);

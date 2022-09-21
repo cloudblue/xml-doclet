@@ -3,7 +3,19 @@ package com.automation.xmldoclet;
 import com.automation.xmldoclet.simpledata.Annotation3;
 import com.automation.xmldoclet.simpledata.AnnotationCascadeChild;
 import com.automation.xmldoclet.simpledata.Class1;
+import com.automation.xmldoclet.simpledata.Class13;
+import com.automation.xmldoclet.simpledata.Class14;
+import com.automation.xmldoclet.simpledata.Class15;
+import com.automation.xmldoclet.simpledata.Class16;
+import com.automation.xmldoclet.simpledata.Class17;
+import com.automation.xmldoclet.simpledata.Class18;
+import com.automation.xmldoclet.simpledata.Class19;
 import com.automation.xmldoclet.simpledata.Class2;
+import com.automation.xmldoclet.simpledata.Class20;
+import com.automation.xmldoclet.simpledata.Class21;
+import com.automation.xmldoclet.simpledata.Class22;
+import com.automation.xmldoclet.simpledata.Class23;
+import com.automation.xmldoclet.simpledata.Class24;
 import com.automation.xmldoclet.simpledata.Class3;
 import com.automation.xmldoclet.simpledata.Class4;
 import com.automation.xmldoclet.simpledata.Class5;
@@ -12,6 +24,7 @@ import com.automation.xmldoclet.simpledata.Class7;
 import com.automation.xmldoclet.simpledata.Class8;
 import com.automation.xmldoclet.simpledata.Class9;
 import com.automation.xmldoclet.simpledata.ClassAnnotationCascade;
+import com.automation.xmldoclet.simpledata.Enum1;
 import com.automation.xmldoclet.xjc.AnnotationArgument;
 import com.automation.xmldoclet.xjc.AnnotationInstance;
 import com.automation.xmldoclet.xjc.Class;
@@ -42,7 +55,7 @@ public class ClassTest extends AbstractTestParent {
      */
     @Test
     public void testClassAnnotationCascade() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/ClassAnnotationCascade.java"};
+        String[] sourceFiles = new String[] {getSourceFile(ClassAnnotationCascade.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -50,7 +63,7 @@ public class ClassTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertEquals(packageNode.getComment(), null);
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getClazz().size(), 1);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -126,7 +139,7 @@ public class ClassTest extends AbstractTestParent {
      */
     @Test
     public void testClass1() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Class1.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Class1.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -134,7 +147,7 @@ public class ClassTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -164,7 +177,7 @@ public class ClassTest extends AbstractTestParent {
      */
     @Test
     public void testClass2() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Class2.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Class2.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -173,7 +186,7 @@ public class ClassTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -208,7 +221,7 @@ public class ClassTest extends AbstractTestParent {
      */
     @Test
     public void testClass3() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Class3.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Class3.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -217,7 +230,7 @@ public class ClassTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -249,7 +262,7 @@ public class ClassTest extends AbstractTestParent {
         assertFalse(method.isStatic());
         assertFalse(method.isSynchronized());
         assertFalse(method.isVarArgs());
-        assertEquals(method.getQualified(), "com.automation.xmldoclet.simpledata.Class3.method1");
+        assertEquals(method.getQualified(), getSimpledataPackage() + ".Class3.method1");
         assertEquals(method.getScope(), "public");
         assertEquals(method.getAnnotation().size(), 0);
         assertEquals(method.getParameter().size(), 0);
@@ -267,7 +280,7 @@ public class ClassTest extends AbstractTestParent {
      */
     @Test
     public void testClass4() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Class4.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Class4.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -276,7 +289,7 @@ public class ClassTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -322,8 +335,8 @@ public class ClassTest extends AbstractTestParent {
     @Test
     public void testClass5() {
         String[] sourceFiles = new String[] {
-            "./src/test/java/com/automation/xmldoclet/simpledata/Class5.java",
-            "./src/test/java/com/automation/xmldoclet/simpledata/Class3.java"};
+            getSourceFile(Class5.class),
+            getSourceFile(Class3.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -331,7 +344,7 @@ public class ClassTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -346,7 +359,7 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(classNode.getField().size(), 0);
         assertEquals(classNode.getAnnotation().size(), 0);
         assertEquals(classNode.getInterface().size(), 0);
-        assertEquals(classNode.getClazz().getQualified(), "com.automation.xmldoclet.simpledata.Class3");
+        assertEquals(classNode.getClazz().getQualified(), getSimpledataPackage() + ".Class3");
         assertFalse(classNode.isAbstract());
         assertFalse(classNode.isExternalizable());
         assertTrue(classNode.isIncluded());
@@ -361,7 +374,7 @@ public class ClassTest extends AbstractTestParent {
      */
     @Test
     public void testClass6() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Class6.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Class6.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -370,7 +383,7 @@ public class ClassTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -406,7 +419,7 @@ public class ClassTest extends AbstractTestParent {
      */
     @Test
     public void testClass7() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Class7.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Class7.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -415,7 +428,7 @@ public class ClassTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -450,7 +463,7 @@ public class ClassTest extends AbstractTestParent {
      */
     @Test
     public void testClass8() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Class8.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Class8.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -458,7 +471,7 @@ public class ClassTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -488,7 +501,7 @@ public class ClassTest extends AbstractTestParent {
      */
     @Test
     public void testClass9() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Class9.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Class9.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -496,7 +509,7 @@ public class ClassTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -526,7 +539,7 @@ public class ClassTest extends AbstractTestParent {
      */
     @Test
     public void testClass10() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Class10.java"};
+        String[] sourceFiles = new String[] {getSourceFile("Class10")};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -534,7 +547,7 @@ public class ClassTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -543,7 +556,7 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(classNode.getComment(), "Class10");
         assertEquals(classNode.getConstructor().size(), 1);
         assertEquals(classNode.getName(), "Class10");
-        assertEquals(classNode.getQualified(), "com.automation.xmldoclet.simpledata.Class10");
+        assertEquals(classNode.getQualified(), getSimpledataPackage() + ".Class10");
         assertEquals(classNode.getScope(), "");
         assertEquals(classNode.getMethod().size(), 0);
         assertEquals(classNode.getField().size(), 0);
@@ -564,7 +577,7 @@ public class ClassTest extends AbstractTestParent {
      */
     @Test
     public void testClass11() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Class11.java"};
+        String[] sourceFiles = new String[] {getSourceFile("Class11")};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -572,7 +585,7 @@ public class ClassTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -581,7 +594,7 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(classNode.getComment(), "Class11");
         assertEquals(classNode.getConstructor().size(), 1);
         assertEquals(classNode.getName(), "Class11");
-        assertEquals(classNode.getQualified(), "com.automation.xmldoclet.simpledata.Class11");
+        assertEquals(classNode.getQualified(), getSimpledataPackage() + ".Class11");
         assertEquals(classNode.getScope(), "public");
         assertEquals(classNode.getMethod().size(), 0);
         assertEquals(classNode.getField().size(), 0);
@@ -602,7 +615,7 @@ public class ClassTest extends AbstractTestParent {
      */
     @Test
     public void testClass12() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Class12.java"};
+        String[] sourceFiles = new String[] {getSourceFile("Class12")};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -610,7 +623,7 @@ public class ClassTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -619,7 +632,7 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(classNode.getComment(), "Class12");
         assertEquals(classNode.getConstructor().size(), 1);
         assertEquals(classNode.getName(), "Class12");
-        assertEquals(classNode.getQualified(), "com.automation.xmldoclet.simpledata.Class12");
+        assertEquals(classNode.getQualified(), getSimpledataPackage() + ".Class12");
         assertEquals(classNode.getScope(), "public");
         assertEquals(classNode.getMethod().size(), 0);
         assertEquals(classNode.getField().size(), 0);
@@ -640,7 +653,7 @@ public class ClassTest extends AbstractTestParent {
      */
     @Test
     public void testClass13() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Class13.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Class13.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -649,7 +662,7 @@ public class ClassTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -658,7 +671,7 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(classNode.getComment(), "Class13");
         assertEquals(classNode.getConstructor().size(), 1);
         assertEquals(classNode.getName(), "Class13");
-        assertEquals(classNode.getQualified(), "com.automation.xmldoclet.simpledata.Class13");
+        assertEquals(classNode.getQualified(), getSimpledataPackage() + ".Class13");
         assertEquals(classNode.getScope(), "public");
         assertEquals(classNode.getGeneric().size(), 1);
         assertEquals(classNode.getMethod().size(), 0);
@@ -683,7 +696,7 @@ public class ClassTest extends AbstractTestParent {
      */
     @Test
     public void testClass14() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Class14.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Class14.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -692,7 +705,7 @@ public class ClassTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -701,7 +714,7 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(classNode.getComment(), "Class14");
         assertEquals(classNode.getConstructor().size(), 1);
         assertEquals(classNode.getName(), "Class14");
-        assertEquals(classNode.getQualified(), "com.automation.xmldoclet.simpledata.Class14");
+        assertEquals(classNode.getQualified(), getSimpledataPackage() + ".Class14");
         assertEquals(classNode.getScope(), "public");
         assertEquals(classNode.getGeneric().size(), 1);
         assertEquals(classNode.getMethod().size(), 0);
@@ -728,7 +741,7 @@ public class ClassTest extends AbstractTestParent {
      */
     @Test
     public void testClass15() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Class15.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Class15.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -737,7 +750,7 @@ public class ClassTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertNull(packageNode.getComment());
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 0);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -746,7 +759,7 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(classNode.getComment(), "Class15");
         assertEquals(classNode.getConstructor().size(), 1);
         assertEquals(classNode.getName(), "Class15");
-        assertEquals(classNode.getQualified(), "com.automation.xmldoclet.simpledata.Class15");
+        assertEquals(classNode.getQualified(), getSimpledataPackage() + ".Class15");
         assertEquals(classNode.getScope(), "public");
         assertEquals(classNode.getGeneric().size(), 1);
         assertEquals(classNode.getMethod().size(), 0);
@@ -774,8 +787,8 @@ public class ClassTest extends AbstractTestParent {
     @Test
     public void testClass16() {
         String[] sourceFiles = new String[] {
-            "./src/test/java/com/automation/xmldoclet/simpledata/Class16.java",
-            "./src/test/java/com/automation/xmldoclet/simpledata/Annotation3.java"};
+            getSourceFile(Class16.class),
+            getSourceFile(Annotation3.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -796,8 +809,8 @@ public class ClassTest extends AbstractTestParent {
     @Test
     public void testClass17() {
         String[] sourceFiles = new String[] {
-            "./src/test/java/com/automation/xmldoclet/simpledata/Class17.java",
-            "./src/test/java/com/automation/xmldoclet/simpledata/Annotation5.java"};
+            getSourceFile(Class17.class),
+            getSourceFile("Annotation5")};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -818,8 +831,8 @@ public class ClassTest extends AbstractTestParent {
     @Test
     public void testClass18() {
         String[] sourceFiles = new String[] {
-            "./src/test/java/com/automation/xmldoclet/simpledata/Class18.java",
-            "./src/test/java/com/automation/xmldoclet/simpledata/Annotation6.java"};
+            getSourceFile(Class18.class),
+            getSourceFile("Annotation6")};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -839,16 +852,16 @@ public class ClassTest extends AbstractTestParent {
     @Test
     public void testClass19() {
         String[] sourceFiles = new String[] {
-            "./src/test/java/com/automation/xmldoclet/simpledata/Class19.java",
-            "./src/test/java/com/automation/xmldoclet/simpledata/Annotation7.java",
-            "./src/test/java/com/automation/xmldoclet/simpledata/Enum1.java"};
+            getSourceFile(Class19.class),
+            getSourceFile("Annotation7"),
+            getSourceFile(Enum1.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
         Class classNode = packageNode.getClazz().get(0);
         AnnotationInstance instance = classNode.getAnnotation().get(0);
         AnnotationArgument argument = instance.getArgument().get(0);
-        assertEquals(argument.getType().getQualified(), "com.automation.xmldoclet.simpledata.Enum1");
+        assertEquals(argument.getType().getQualified(), getSimpledataPackage() + ".Enum1");
         assertEquals(argument.getValue().size(), 1);
         assertEquals(argument.getValue().get(0), "a");
         assertFalse(argument.isPrimitive());
@@ -861,8 +874,8 @@ public class ClassTest extends AbstractTestParent {
     @Test
     public void testClass20() {
         String[] sourceFiles = new String[] {
-            "./src/test/java/com/automation/xmldoclet/simpledata/Class20.java",
-            "./src/test/java/com/automation/xmldoclet/simpledata/Annotation8.java"};
+            getSourceFile(Class20.class),
+            getSourceFile("Annotation8")};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -882,8 +895,8 @@ public class ClassTest extends AbstractTestParent {
     @Test
     public void testClass21() {
         String[] sourceFiles = new String[] {
-            "./src/test/java/com/automation/xmldoclet/simpledata/Class21.java",
-            "./src/test/java/com/automation/xmldoclet/simpledata/Annotation10.java"};
+            getSourceFile(Class21.class),
+            getSourceFile("Annotation10")};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -903,8 +916,8 @@ public class ClassTest extends AbstractTestParent {
     @Test
     public void testClass22() {
         String[] sourceFiles = new String[] {
-            "./src/test/java/com/automation/xmldoclet/simpledata/Class22.java",
-            "./src/test/java/com/automation/xmldoclet/simpledata/Annotation10.java"};
+            getSourceFile(Class22.class),
+            getSourceFile("Annotation10")};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -924,8 +937,8 @@ public class ClassTest extends AbstractTestParent {
     @Test
     public void testClass23() {
         String[] sourceFiles = new String[] {
-            "./src/test/java/com/automation/xmldoclet/simpledata/Class23.java",
-            "./src/test/java/com/automation/xmldoclet/simpledata/Annotation11.java"};
+            getSourceFile(Class23.class),
+            getSourceFile("Annotation11")};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -945,8 +958,8 @@ public class ClassTest extends AbstractTestParent {
     @Test
     public void testClass24() {
         String[] sourceFiles = new String[] {
-            "./src/test/java/com/automation/xmldoclet/simpledata/Class24.java",
-            "./src/test/java/com/automation/xmldoclet/simpledata/Annotation5.java"};
+            getSourceFile(Class24.class),
+            getSourceFile("Annotation5")};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);

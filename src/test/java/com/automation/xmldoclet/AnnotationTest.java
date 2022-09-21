@@ -32,7 +32,7 @@ public class AnnotationTest extends AbstractTestParent {
      */
     @Test
     public void testAnnotation1() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Annotation1.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Annotation1.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -40,7 +40,7 @@ public class AnnotationTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertEquals(packageNode.getComment(), null);
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 1);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -60,7 +60,7 @@ public class AnnotationTest extends AbstractTestParent {
      */
     @Test
     public void testAnnotation2() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Annotation2.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Annotation2.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -69,7 +69,7 @@ public class AnnotationTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertEquals(packageNode.getComment(), null);
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 1);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -94,7 +94,7 @@ public class AnnotationTest extends AbstractTestParent {
      */
     @Test
     public void testAnnotation3() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Annotation3.java"};
+        String[] sourceFiles = new String[] {getSourceFile(Annotation3.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -103,7 +103,7 @@ public class AnnotationTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertEquals(packageNode.getComment(), null);
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 1);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -119,7 +119,7 @@ public class AnnotationTest extends AbstractTestParent {
 
         // test annotation element
         assertEquals(element.getName(), "id");
-        assertEquals(element.getQualified(), "com.automation.xmldoclet.simpledata.Annotation3.id");
+        assertEquals(element.getQualified(), getSimpledataPackage() + ".Annotation3.id");
         assertEquals(element.getType().getQualified(), "int");
         assertEquals(element.getDefault(), Integer.toString(3));
     }
@@ -129,7 +129,7 @@ public class AnnotationTest extends AbstractTestParent {
      */
     @Test
     public void testAnnotation4() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/Annotation4.java"};
+        String[] sourceFiles = new String[] {getSourceFile("Annotation4")};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Package packageNode = rootNode.getPackage().get(0);
@@ -137,7 +137,7 @@ public class AnnotationTest extends AbstractTestParent {
 
         assertEquals(rootNode.getPackage().size(), 1);
         assertEquals(packageNode.getComment(), null);
-        assertEquals(packageNode.getName(), "com.automation.xmldoclet.simpledata");
+        assertEquals(packageNode.getName(), getSimpledataPackage());
         assertEquals(packageNode.getAnnotation().size(), 1);
         assertEquals(packageNode.getEnum().size(), 0);
         assertEquals(packageNode.getInterface().size(), 0);
@@ -145,7 +145,7 @@ public class AnnotationTest extends AbstractTestParent {
 
         assertEquals(annotationNode.getComment(), "Annotation4");
         assertEquals(annotationNode.getName(), "Annotation4");
-        assertEquals(annotationNode.getQualified(), "com.automation.xmldoclet.simpledata.Annotation4");
+        assertEquals(annotationNode.getQualified(), getSimpledataPackage() + ".Annotation4");
         assertEquals(annotationNode.getScope(), "");
         assertEquals(annotationNode.getAnnotation().size(), 0);
         assertEquals(annotationNode.getElement().size(), 0);

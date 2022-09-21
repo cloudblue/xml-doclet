@@ -1,5 +1,6 @@
 package com.automation.xmldoclet;
 
+import com.automation.xmldoclet.simpledata.Annotation1;
 import com.automation.xmldoclet.xjc.Root;
 
 import javax.xml.bind.JAXB;
@@ -114,9 +115,25 @@ public class AbstractTestParent {
     /**
      * Use for debugging tests.
      */
-    private static String marshalJAXB(Object jaxbObject) {
+    static String marshalJAXB(Object jaxbObject) {
         final StringWriter writer = new StringWriter();
         JAXB.marshal(jaxbObject, writer);
         return writer.toString();
+    }
+
+    static <T> String getSourceFile(java.lang.Class<T> clazz) {
+        return "./src/test/java/"
+            + clazz.getCanonicalName().replaceAll("\\.", "/")
+            + ".java";
+    }
+
+    static String getSourceFile(String clazz) {
+        return "./src/test/java/"
+            + getSimpledataPackage().replaceAll("\\.", "/")
+            + "/" + clazz + ".java";
+    }
+
+    static String getSimpledataPackage() {
+        return Annotation1.class.getPackageName();
     }
 }

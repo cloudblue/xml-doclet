@@ -1,5 +1,6 @@
 package com.automation.xmldoclet;
 
+import com.automation.xmldoclet.simpledata.AnnotatedParameter;
 import com.automation.xmldoclet.xjc.Method;
 import com.automation.xmldoclet.xjc.Root;
 import com.automation.xmldoclet.xjc.TypeInfo;
@@ -11,7 +12,7 @@ public class AnnotatedParameterTest extends AbstractTestParent {
 
     @Test
     public void testAnnotatedParameter() {
-        String[] sourceFiles = new String[] {"./src/test/java/com/automation/xmldoclet/simpledata/AnnotatedParameter.java"};
+        String[] sourceFiles = new String[] {getSourceFile(AnnotatedParameter.class)};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
         Method methodNode = rootNode
