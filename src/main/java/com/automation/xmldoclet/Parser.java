@@ -58,6 +58,8 @@ import java.util.stream.Collectors;
 
 public class Parser {
 
+    private Root xmlRoot;
+
     private final DocletEnvironment environment;
     private final DocTrees docTreesUtils;
     private final Elements elementUtils;
@@ -84,63 +86,62 @@ public class Parser {
     }
 
     public Root transform() {
-        final Root xmlRoot = new Root();
-        transformElements(xmlRoot, environment.getSpecifiedElements());
-        return xmlRoot;
+        setXmlRoot(new Root());
+        transformElements(environment.getSpecifiedElements());
+        return getXmlRoot();
     }
 
-    private void transformElements(Root xmlRoot, Collection<? extends Element> elements) {
+    private void transformElements(Collection<? extends Element> elements) {
         for (Element element : elements) {
-            transformElement(xmlRoot, element);
+            transformElement(element);
         }
     }
 
-    private void transformElement(Root xmlRoot, Element element) {
+    private void transformElement(Element element) {
         if (element.getKind() == ElementKind.PACKAGE) {
-            transformPackageElement(xmlRoot, (PackageElement) element);
+            transformPackageElement((PackageElement) element);
         }
         if (element.getKind().isClass() || element.getKind().isInterface()) {
-            transformTypeElement(xmlRoot, (TypeElement) element);
+            transformTypeElement((TypeElement) element);
         }
     }
 
-    private void transformPackageElement(Root xmlRoot, PackageElement packageElement) {
+    private void transformPackageElement(PackageElement packageElement) {
         final Package xmlPackage = new Package();
         xmlPackage.setName(packageElement.getQualifiedName().toString());
         transformJavadoc(packageElement, xmlPackage::setComment, xmlPackage.getTag());
-        xmlRoot.getPackage().add(xmlPackage);
-        transformElements(xmlRoot, packageElement.getEnclosedElements());
+        getXmlRoot().getPackage().add(xmlPackage);
+        transformElements(packageElement.getEnclosedElements());
     }
 
-    private void transformTypeElement(Root xmlRoot, TypeElement typeElement) {
+    private void transformTypeElement(TypeElement typeElement) {
         if (environment.getFileKind(typeElement) != JavaFileObject.Kind.SOURCE) {
             return;
         }
         if (!environment.isIncluded(typeElement)) {
             return;
         }
-        final PackageElement packageElement = getEnclosingPackage(typeElement);
         if (typeElement.getKind() == ElementKind.ANNOTATION_TYPE) {
-            transformAnnotationType(xmlRoot, typeElement, packageElement);
+            transformAnnotationType(typeElement);
 
         } else if (typeElement.getKind() == ElementKind.ENUM) {
-            transformEnumType(xmlRoot, typeElement, packageElement);
+            transformEnumType(typeElement);
 
         } else if (typeElement.getKind() == ElementKind.INTERFACE) {
-            transformInterfaceType(xmlRoot, typeElement, packageElement);
+            transformInterfaceType(typeElement);
 
         } else if (typeElement.getKind() == ElementKind.CLASS) {
-            transformClassType(xmlRoot, typeElement, packageElement);
+            transformClassType(typeElement);
 
         } else {
-            transformElements(xmlRoot, typeElement.getEnclosedElements());
+            transformElements(typeElement.getEnclosedElements());
         }
     }
 
-    private void transformClassType(Root xmlRoot, TypeElement typeElement, PackageElement packageElement) {
+    private void transformClassType(TypeElement typeElement) {
         final Class xmlClass = new Class();
-        setNames(typeElement, packageElement, xmlClass::setName, xmlClass::setQualified);
-        setFlagIf(typeElement, Modifier.ABSTRACT, xmlClass::setAbstract);
+        setNames(typeElement, xmlClass::setName, xmlClass::setQualified);
+        xmlClass.setAbstract(hasModifier(typeElement, Modifier.ABSTRACT));
         xmlClass.setScope(getScope(typeElement));
         xmlClass.setError(typeUtils.isAssignable(typeElement.asType(), errorType));
         xmlClass.setException(typeUtils.isAssignable(typeElement.asType(), exceptionType));
@@ -158,23 +159,23 @@ public class Parser {
             }
             if (enclosedElement.getKind() == ElementKind.FIELD) {
                 final VariableElement fieldElement = (VariableElement) enclosedElement;
-                xmlClass.getField().add(transformFieldElement(fieldElement, xmlClass.getQualified()));
+                xmlClass.getField().add(transformFieldElement(fieldElement));
 
             } else if (enclosedElement.getKind() == ElementKind.CONSTRUCTOR) {
                 final ExecutableElement constructorElement = (ExecutableElement) enclosedElement;
-                xmlClass.getConstructor().add(transformConstructorElement(constructorElement, xmlClass.getQualified()));
+                xmlClass.getConstructor().add(transformConstructorElement(constructorElement));
 
             } else if (enclosedElement.getKind() == ElementKind.METHOD) {
                 final ExecutableElement methodElement = (ExecutableElement) enclosedElement;
-                xmlClass.getMethod().add(transformMethodElement(methodElement, xmlClass.getQualified()));
+                xmlClass.getMethod().add(transformMethodElement(methodElement));
             }
         }
-        getXmlPackage(xmlRoot, packageElement).getClazz().add(xmlClass);
+        getXmlPackage(typeElement).getClazz().add(xmlClass);
     }
 
-    private void transformInterfaceType(Root xmlRoot, TypeElement typeElement, PackageElement packageElement) {
+    private void transformInterfaceType(TypeElement typeElement) {
         final Interface xmlInterface = new Interface();
-        setNames(typeElement, packageElement, xmlInterface::setName, xmlInterface::setQualified);
+        setNames(typeElement, xmlInterface::setName, xmlInterface::setQualified);
         xmlInterface.setScope(getScope(typeElement));
         xmlInterface.setIncluded(environment.isIncluded(typeElement));
         transformJavadoc(typeElement, xmlInterface::setComment, xmlInterface.getTag());
@@ -187,19 +188,19 @@ public class Parser {
             }
             if (enclosedElement.getKind() == ElementKind.FIELD) {
                 final VariableElement fieldElement = (VariableElement) enclosedElement;
-                xmlInterface.getField().add(transformFieldElement(fieldElement, xmlInterface.getQualified()));
+                xmlInterface.getField().add(transformFieldElement(fieldElement));
             }
             if (enclosedElement.getKind() == ElementKind.METHOD) {
                 final ExecutableElement methodElement = (ExecutableElement) enclosedElement;
-                xmlInterface.getMethod().add(transformMethodElement(methodElement, xmlInterface.getQualified()));
+                xmlInterface.getMethod().add(transformMethodElement(methodElement));
             }
         }
-        getXmlPackage(xmlRoot, packageElement).getInterface().add(xmlInterface);
+        getXmlPackage(typeElement).getInterface().add(xmlInterface);
     }
 
-    private void transformEnumType(Root xmlRoot, TypeElement typeElement, PackageElement packageElement) {
+    private void transformEnumType(TypeElement typeElement) {
         final Enum xmlEnum = new Enum();
-        setNames(typeElement, packageElement, xmlEnum::setName, xmlEnum::setQualified);
+        setNames(typeElement, xmlEnum::setName, xmlEnum::setQualified);
         xmlEnum.setScope(getScope(typeElement));
         xmlEnum.setIncluded(environment.isIncluded(typeElement));
         transformJavadoc(typeElement, xmlEnum::setComment, xmlEnum.getTag());
@@ -215,12 +216,12 @@ public class Parser {
                 xmlEnum.getConstant().add(transformEnumConstant(constantElement));
             }
         }
-        getXmlPackage(xmlRoot, packageElement).getEnum().add(xmlEnum);
+        getXmlPackage(typeElement).getEnum().add(xmlEnum);
     }
 
-    private void transformAnnotationType(Root xmlRoot, TypeElement typeElement, PackageElement packageElement) {
+    private void transformAnnotationType(TypeElement typeElement) {
         final Annotation xmlAnnotation = new Annotation();
-        setNames(typeElement, packageElement, xmlAnnotation::setName, xmlAnnotation::setQualified);
+        setNames(typeElement, xmlAnnotation::setName, xmlAnnotation::setQualified);
         xmlAnnotation.setScope(getScope(typeElement));
         xmlAnnotation.setIncluded(environment.isIncluded(typeElement));
         transformJavadoc(typeElement, xmlAnnotation::setComment, xmlAnnotation.getTag());
@@ -231,16 +232,16 @@ public class Parser {
             }
             if (enclosedElement.getKind() == ElementKind.METHOD) {
                 final ExecutableElement methodElement = (ExecutableElement) enclosedElement;
-                xmlAnnotation.getElement().add(transformAnnotationElement(methodElement, xmlAnnotation.getQualified()));
+                xmlAnnotation.getElement().add(transformAnnotationElement(methodElement));
             }
         }
-        getXmlPackage(xmlRoot, packageElement).getAnnotation().add(xmlAnnotation);
+        getXmlPackage(typeElement).getAnnotation().add(xmlAnnotation);
     }
 
-    private AnnotationElement transformAnnotationElement(ExecutableElement annotationElement, String qualified) {
+    private AnnotationElement transformAnnotationElement(ExecutableElement annotationElement) {
         final AnnotationElement xmlElement = new AnnotationElement();
         xmlElement.setName(annotationElement.getSimpleName().toString());
-        xmlElement.setQualified(qualified + "." + xmlElement.getName());
+        xmlElement.setQualified(getEnclosingQualified(annotationElement) + "." + xmlElement.getName());
         if (annotationElement.getDefaultValue() != null) {
             xmlElement.setDefault(String.valueOf(annotationElement.getDefaultValue().getValue()));
         }
@@ -256,15 +257,15 @@ public class Parser {
         return xmlConstant;
     }
 
-    private Field transformFieldElement(VariableElement variableElement, String qualified) {
+    private Field transformFieldElement(VariableElement variableElement) {
         final Field xmlField = new Field();
         xmlField.setName(variableElement.getSimpleName().toString());
-        xmlField.setQualified(qualified + "." + xmlField.getName());
+        xmlField.setQualified(getEnclosingQualified(variableElement) + "." + xmlField.getName());
         xmlField.setScope(getScope(variableElement));
-        setFlagIf(variableElement, Modifier.VOLATILE, xmlField::setVolatile);
-        setFlagIf(variableElement, Modifier.TRANSIENT, xmlField::setTransient);
-        setFlagIf(variableElement, Modifier.STATIC, xmlField::setStatic);
-        setFlagIf(variableElement, Modifier.FINAL, xmlField::setFinal);
+        xmlField.setVolatile(hasModifier(variableElement, Modifier.VOLATILE));
+        xmlField.setTransient(hasModifier(variableElement, Modifier.TRANSIENT));
+        xmlField.setStatic(hasModifier(variableElement, Modifier.STATIC));
+        xmlField.setFinal(hasModifier(variableElement, Modifier.FINAL));
         xmlField.setType(transformTypeMirror(variableElement.asType()));
         transformJavadoc(variableElement, xmlField::setComment, xmlField.getTag());
         final Object constantValue = variableElement.getConstantValue();
@@ -275,17 +276,17 @@ public class Parser {
         return xmlField;
     }
 
-    private Constructor transformConstructorElement(ExecutableElement constructorElement, String qualified) {
+    private Constructor transformConstructorElement(ExecutableElement constructorElement) {
         final Constructor xmlConstructor = new Constructor();
         xmlConstructor.setName(constructorElement.getEnclosingElement().getSimpleName().toString());
         xmlConstructor.setSignature(getSignature(constructorElement));
-        xmlConstructor.setQualified(qualified);
+        xmlConstructor.setQualified(getEnclosingQualified(constructorElement));
         xmlConstructor.setScope(getScope(constructorElement));
-        setFlagIf(constructorElement, Modifier.FINAL, xmlConstructor::setFinal);
+        xmlConstructor.setFinal(hasModifier(constructorElement, Modifier.FINAL));
         xmlConstructor.setIncluded(environment.isIncluded(constructorElement));
-        setFlagIf(constructorElement, Modifier.NATIVE, xmlConstructor::setNative);
-        setFlagIf(constructorElement, Modifier.SYNCHRONIZED, xmlConstructor::setSynchronized);
-        setFlagIf(constructorElement, Modifier.STATIC, xmlConstructor::setStatic);
+        xmlConstructor.setNative(hasModifier(constructorElement, Modifier.NATIVE));
+        xmlConstructor.setSynchronized(hasModifier(constructorElement, Modifier.SYNCHRONIZED));
+        xmlConstructor.setStatic(hasModifier(constructorElement, Modifier.STATIC));
         xmlConstructor.setVarArgs(constructorElement.isVarArgs());
         transformJavadoc(constructorElement, xmlConstructor::setComment, xmlConstructor.getTag());
         xmlConstructor.getParameter().addAll(transformParameters(constructorElement));
@@ -294,18 +295,18 @@ public class Parser {
         return xmlConstructor;
     }
 
-    private Method transformMethodElement(ExecutableElement methodElement, String qualified) {
+    private Method transformMethodElement(ExecutableElement methodElement) {
         final Method xmlMethod = new Method();
         xmlMethod.setName(methodElement.getSimpleName().toString());
         xmlMethod.setSignature(getSignature(methodElement));
-        xmlMethod.setQualified(qualified + "." + xmlMethod.getName());
+        xmlMethod.setQualified(((QualifiedNameable) methodElement.getEnclosingElement()).getQualifiedName() + "." + xmlMethod.getName());
         xmlMethod.setScope(getScope(methodElement));
-        setFlagIf(methodElement, Modifier.ABSTRACT, xmlMethod::setAbstract);
-        setFlagIf(methodElement, Modifier.FINAL, xmlMethod::setFinal);
+        xmlMethod.setAbstract(hasModifier(methodElement, Modifier.ABSTRACT));
+        xmlMethod.setFinal(hasModifier(methodElement, Modifier.FINAL));
         xmlMethod.setIncluded(environment.isIncluded(methodElement));
-        setFlagIf(methodElement, Modifier.NATIVE, xmlMethod::setNative);
-        setFlagIf(methodElement, Modifier.SYNCHRONIZED, xmlMethod::setSynchronized);
-        setFlagIf(methodElement, Modifier.STATIC, xmlMethod::setStatic);
+        xmlMethod.setNative(hasModifier(methodElement, Modifier.NATIVE));
+        xmlMethod.setSynchronized(hasModifier(methodElement, Modifier.SYNCHRONIZED));
+        xmlMethod.setStatic(hasModifier(methodElement, Modifier.STATIC));
         xmlMethod.setVarArgs(methodElement.isVarArgs());
         transformJavadoc(methodElement, xmlMethod::setComment, xmlMethod.getTag());
         xmlMethod.getParameter().addAll(transformParameters(methodElement));
@@ -445,6 +446,45 @@ public class Parser {
         }
     }
 
+    private List<TypeInfo> transformTypeMirrorIfNonNull(TypeMirror typeMirror) {
+        return typeMirror != null
+            ? Collections.singletonList(transformTypeMirror(typeMirror))
+            : Collections.emptyList();
+    }
+
+    private List<TypeInfo> transformTypeMirrors(List<? extends TypeMirror> typeMirrors) {
+        return typeMirrors.stream()
+            .map(this::transformTypeMirror)
+            .collect(Collectors.toList());
+    }
+
+    private TypeInfo transformTypeMirror(TypeMirror typeMirror) {
+        TypeInfo xmlTypeInfo = new TypeInfo();
+        if (typeMirror.getKind() == TypeKind.DECLARED) {
+            xmlTypeInfo.setQualified(stripType(typeUtils.erasure(typeMirror).toString()));
+            final DeclaredType declaredType = (DeclaredType) typeMirror;
+            final List<TypeInfo> generic = declaredType.getTypeArguments().stream()
+                .map(this::transformTypeMirror)
+                .collect(Collectors.toList());
+            xmlTypeInfo.getGeneric().addAll(generic);
+        } else if (typeMirror.getKind() == TypeKind.ARRAY) {
+            final ArrayType arrayType = (ArrayType) typeMirror;
+            xmlTypeInfo = transformTypeMirror(arrayType.getComponentType());
+            xmlTypeInfo.setDimension((xmlTypeInfo.getDimension() != null ? xmlTypeInfo.getDimension() : "") + "[]");
+        } else if (typeMirror.getKind() == TypeKind.WILDCARD) {
+            xmlTypeInfo.setQualified("?");
+            final WildcardType wildcardType = (WildcardType) typeMirror;
+            final Wildcard wildcard = new Wildcard();
+            wildcard.getExtendsBound().addAll(transformTypeMirrorIfNonNull(wildcardType.getExtendsBound()));
+            wildcard.getSuperBound().addAll(transformTypeMirrorIfNonNull(wildcardType.getSuperBound()));
+            xmlTypeInfo.setWildcard(wildcard);
+        } else {
+            xmlTypeInfo.setQualified(stripType(typeMirror.toString()));
+        }
+        return xmlTypeInfo;
+    }
+
+
     private PackageElement getEnclosingPackage(Element element) {
         Objects.requireNonNull(element);
         return element.getKind() == ElementKind.PACKAGE
@@ -462,7 +502,7 @@ public class Parser {
 
     private String getSignature(ExecutableElement executableElement) {
         final StringBuilder sb = new StringBuilder();
-        sb.append("(");
+        sb.append('(');
         final List<? extends VariableElement> parameters = executableElement.getParameters();
         final Iterator<? extends VariableElement> iterator = parameters.iterator();
         while (iterator.hasNext()) {
@@ -478,80 +518,34 @@ public class Parser {
                 sb.append(", ");
             }
         }
-        sb.append(")");
+        sb.append(')');
         return sb.toString();
     }
 
-    private List<TypeInfo> transformTypeMirrorIfNonNull(TypeMirror typeMirror) {
-        return typeMirror != null
-            ? Collections.singletonList(transformTypeMirror(typeMirror))
-            : Collections.emptyList();
+    private boolean hasModifier(Element element, Modifier modifier) {
+        return element.getModifiers().contains(modifier);
     }
 
-    private List<TypeInfo> transformTypeMirrors(List<? extends TypeMirror> typeMirrors) {
-        return typeMirrors.stream()
-            .map(this::transformTypeMirror)
-            .collect(Collectors.toList());
+    private Package getXmlPackage(Element element) {
+        return getXmlPackage(getEnclosingPackage(element));
     }
 
-    private TypeInfo transformTypeMirror(TypeMirror typeMirror) {
-        final TypeInfo xmlTypeInfo = new TypeInfo();
-        if (typeMirror.getKind() == TypeKind.DECLARED) {
-            xmlTypeInfo.setQualified(stripType(typeUtils.erasure(typeMirror).toString()));
-//			xmlTypeInfo.setQualified(typeUtils.erasure(typeMirror).toString());
-            final DeclaredType declaredType = (DeclaredType) typeMirror;
-            final List<TypeInfo> generic = declaredType.getTypeArguments().stream()
-                .map(this::transformTypeMirror)
-                .collect(Collectors.toList());
-            xmlTypeInfo.getGeneric().addAll(generic);
-        } else if (typeMirror.getKind() == TypeKind.ARRAY) {
-            final ArrayType arrayType = (ArrayType) typeMirror;
-            final TypeInfo typeInfo = transformTypeMirror(arrayType.getComponentType());
-            typeInfo.setDimension((typeInfo.getDimension() != null ? typeInfo.getDimension() : "") + "[]");
-            return typeInfo;
-        } else if (typeMirror.getKind() == TypeKind.WILDCARD) {
-            xmlTypeInfo.setQualified("?");
-            final WildcardType wildcardType = (WildcardType) typeMirror;
-            final Wildcard wildcard = new Wildcard();
-            wildcard.getExtendsBound().addAll(transformTypeMirrorIfNonNull(wildcardType.getExtendsBound()));
-            wildcard.getSuperBound().addAll(transformTypeMirrorIfNonNull(wildcardType.getSuperBound()));
-            xmlTypeInfo.setWildcard(wildcard);
-        } else {
-            xmlTypeInfo.setQualified(stripType(typeMirror.toString()));
-        }
-        return xmlTypeInfo;
-    }
-
-    private void setFlagIf(Element element, Modifier modifier, Consumer<Boolean> flagSetter) {
-        flagSetter.accept(element.getModifiers().contains(modifier));
-    }
-
-    private Package getXmlPackage(Root xmlRoot, PackageElement packageElement) {
-        final Package xmlPackage = xmlRoot.getPackage().stream()
+    private Package getXmlPackage(PackageElement packageElement) {
+        return getXmlRoot().getPackage().stream()
             .filter(p -> Objects.equals(p.getName(), packageElement.getQualifiedName().toString()))
             .findFirst()
-            .orElse(null);
-        if (xmlPackage == null) {
-            final Package newXmlPackage = new Package();
-            newXmlPackage.setName(packageElement.getQualifiedName().toString());
-            xmlRoot.getPackage().add(newXmlPackage);
-            return newXmlPackage;
-        } else {
-            return xmlPackage;
-        }
-    }
-
-    private void setNames(QualifiedNameable qualifiedNameable, PackageElement packageElement, Consumer<String> nameSetter, Consumer<String> qualifiedSetter) {
-        setNames(qualifiedNameable.getQualifiedName().toString(), packageElement, nameSetter, qualifiedSetter);
+            .orElseGet(() -> {
+                final Package xmlPackage = new Package();
+                xmlPackage.setName(packageElement.getQualifiedName().toString());
+                getXmlRoot().getPackage().add(xmlPackage);
+                return xmlPackage;
+            });
     }
 
     private void setNames(Element element, Consumer<String> nameSetter, Consumer<String> qualifiedSetter) {
-        setNames(element.toString(), getEnclosingPackage(element), nameSetter, qualifiedSetter);
-    }
-
-    private void setNames(String qualifiedName, PackageElement packageElement, Consumer<String> nameSetter, Consumer<String> qualifiedSetter) {
-        final String packageName = packageElement.getQualifiedName().toString();
+        final String packageName = getEnclosingPackage(element).getQualifiedName().toString();
         final String packagePrefix = packageName.isEmpty() ? "" : packageName + ".";
+        final String qualifiedName = ((QualifiedNameable) element).getQualifiedName().toString();
         final String name = qualifiedName.substring(packagePrefix.length());
         nameSetter.accept(name);
         qualifiedSetter.accept(qualifiedName);
@@ -562,8 +556,19 @@ public class Parser {
      */
     private String stripType(String type) {
         return Arrays.stream(type.split(" "))
-            .dropWhile(s -> s.startsWith("@"))
+            .dropWhile(s -> s.charAt(0) == '@')
             .collect(Collectors.joining(" "));
     }
 
+    private String getEnclosingQualified(Element element) {
+        return ((QualifiedNameable) element.getEnclosingElement()).getQualifiedName().toString();
+    }
+
+    private Root getXmlRoot() {
+        return xmlRoot;
+    }
+
+    private void setXmlRoot(Root xmlRoot) {
+        this.xmlRoot = xmlRoot;
+    }
 }
