@@ -131,9 +131,10 @@ public class Parser {
 
         } else if (typeElement.getKind() == ElementKind.CLASS) {
             transformClassType(xmlRoot, typeElement, packageElement);
-        }
 
-        transformElements(xmlRoot, typeElement.getEnclosedElements());
+        } else {
+            transformElements(xmlRoot, typeElement.getEnclosedElements());
+        }
     }
 
     private void transformClassType(Root xmlRoot, TypeElement typeElement, PackageElement packageElement) {

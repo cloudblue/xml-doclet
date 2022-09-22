@@ -115,7 +115,7 @@ public class AbstractTestParent {
     /**
      * Use for debugging tests.
      */
-    static String marshalJAXB(Object jaxbObject) {
+    static String getAsXml(Object jaxbObject) {
         final StringWriter writer = new StringWriter();
         JAXB.marshal(jaxbObject, writer);
         return writer.toString();

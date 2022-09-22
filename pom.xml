@@ -43,7 +43,8 @@
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
             <version>${jaxb.version}</version>
-        </dependency>        <!-- JAXB needs javax.activation module (jdk9) -->
+        </dependency>
+        <!-- JAXB needs javax.activation module (jdk9) -->
         <dependency>
             <groupId>jakarta.activation</groupId>
             <artifactId>jakarta.activation-api</artifactId>
