@@ -17,6 +17,7 @@
         <jaxb.version>2.3.6</jaxb.version>
         <activation.version>1.2.2</activation.version>
         <junit.jupiter.version>5.9.0</junit.jupiter.version>
+	    <junit.platform.version>1.9.0</junit.platform.version>
     </properties>
 
     <organization>
@@ -51,17 +52,73 @@
             <version>${activation.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
+	    <dependency>
+		    <groupId>org.junit.jupiter</groupId>
+		    <artifactId>junit-jupiter-engine</artifactId>
+		    <version>${junit.jupiter.version}</version>
+		    <scope>test</scope>
+	    </dependency>
+	    <dependency>
+		    <groupId>org.junit.jupiter</groupId>
+		    <artifactId>junit-jupiter-api</artifactId>
+		    <version>${junit.jupiter.version}</version>
+		    <scope>test</scope>
+	    </dependency>
+	    <dependency>
+		    <groupId>org.junit.jupiter</groupId>
+		    <artifactId>junit-jupiter-params</artifactId>
+		    <version>${junit.jupiter.version}</version>
+		    <scope>test</scope>
+	    </dependency>
+	    <dependency>
+		    <groupId>org.junit.platform</groupId>
+		    <artifactId>junit-platform-suite</artifactId>
+		    <version>${junit.platform.version}</version>
+		    <scope>test</scope>
+	    </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
+	        <plugin>
+		        <!-- Set java version target, use project source encoding -->
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-compiler-plugin</artifactId>
+		        <version>3.10.1</version>
+		        <configuration>
+			        <source>${java.version}</source>
+			        <target>${java.version}</target>
+			        <release>${java.version}</release>
+			        <encoding>${project.build.sourceEncoding}</encoding>
+			        <optimize>true</optimize>
+			        <debug>true</debug>
+			        <compilerId>javac</compilerId>
+		        </configuration>
+	        </plugin>
+	        <plugin>
+		        <artifactId>maven-surefire-plugin</artifactId>
+		        <version>2.22.2</version>
+	        </plugin>
+	        <plugin>
+		        <groupId>org.jacoco</groupId>
+		        <artifactId>jacoco-maven-plugin</artifactId>
+		        <version>0.8.8</version>
+		        <executions>
+			        <execution>
+				        <goals>
+					        <goal>prepare-agent</goal>
+				        </goals>
+			        </execution>
+			        <execution>
+				        <id>report</id>
+				        <phase>test</phase>
+				        <goals>
+					        <goal>report</goal>
+				        </goals>
+			        </execution>
+		        </executions>
+	        </plugin>
+	        <plugin>
                 <!-- Generate the XML binding classes from schema -->
                 <groupId>org.jvnet.jaxb2.maven2</groupId>
                 <artifactId>maven-jaxb23-plugin</artifactId>
@@ -80,21 +137,6 @@
                     <generatePackage>com.automation.xmldoclet.xjc</generatePackage>
                     <schemaDirectory>src/main/xjc</schemaDirectory>
                     <strict>false</strict>
-                </configuration>
-            </plugin>
-            <plugin>
-                <!-- Set java version target, use project source encoding -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <release>${java.version}</release>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <optimize>true</optimize>
-                    <debug>true</debug>
-                    <compilerId>javac</compilerId>
                 </configuration>
             </plugin>
         </plugins>
