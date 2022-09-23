@@ -37,6 +37,7 @@ import com.automation.xmldoclet.xjc.TypeInfo;
 import com.automation.xmldoclet.xjc.TypeParameter;
 import org.junit.jupiter.api.Test;
 
+import static com.automation.xmldoclet.ReflectionSupport.assertStructureEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -68,12 +69,9 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(0, packageNode.getEnum().size());
         assertEquals(0, packageNode.getInterface().size());
 
+        assertStructureEquals(ClassAnnotationCascade.class, classNode);
         assertEquals("ClassAnnotationCascade", classNode.getComment());
-        assertEquals("ClassAnnotationCascade", classNode.getName());
 
-        assertEquals(classNode.getQualified(), ClassAnnotationCascade.class.getName());
-
-        assertEquals(1, classNode.getAnnotation().size());
         AnnotationInstance annotationNode = classNode.getAnnotation().get(0);
 
         assertEquals("AnnotationCascade", annotationNode.getName());
@@ -153,23 +151,8 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(0, packageNode.getInterface().size());
         assertEquals(1, packageNode.getClazz().size());
 
+        assertStructureEquals(Class1.class, classNode);
         assertEquals("Class1", classNode.getComment());
-        assertEquals(Class1.class.getSimpleName(), classNode.getName());
-        assertEquals(Class1.class.getName(), classNode.getQualified());
-        assertEquals("public", classNode.getScope());
-        assertEquals(1, classNode.getConstructor().size());
-        assertEquals(0, classNode.getField().size());
-        assertEquals(0, classNode.getMethod().size());
-        assertEquals(0, classNode.getAnnotation().size());
-        assertEquals(0, classNode.getInterface().size());
-        assertEquals(Object.class.getName(), classNode.getClazz().getQualified());
-        assertFalse(classNode.isAbstract());
-        assertFalse(classNode.isExternalizable());
-        assertTrue(classNode.isIncluded());
-        assertFalse(classNode.isSerializable());
-        assertFalse(classNode.isException());
-        assertFalse(classNode.isError());
-        assertEquals(0, classNode.getGeneric().size());
     }
 
     /**
@@ -192,23 +175,8 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(0, packageNode.getInterface().size());
         assertEquals(1, packageNode.getClazz().size());
 
+        assertStructureEquals(Class2.class, classNode);
         assertEquals("Class2", classNode.getComment());
-        assertEquals(1, classNode.getConstructor().size());
-        assertEquals(Class2.class.getSimpleName(), classNode.getName());
-        assertEquals(Class2.class.getName(), classNode.getQualified());
-        assertEquals("public", classNode.getScope());
-        assertEquals(0, classNode.getField().size());
-        assertEquals(0, classNode.getMethod().size());
-        assertEquals(0, classNode.getAnnotation().size());
-        assertEquals(0, classNode.getInterface().size());
-        assertEquals(Object.class.getName(), classNode.getClazz().getQualified());
-        assertFalse(classNode.isAbstract());
-        assertFalse(classNode.isExternalizable());
-        assertTrue(classNode.isIncluded());
-        assertFalse(classNode.isSerializable());
-        assertFalse(classNode.isException());
-        assertFalse(classNode.isError());
-        assertEquals(0, classNode.getGeneric().size());
 
         assertEquals("Constructor1", constructor.getComment());
         assertEquals("Class2", constructor.getName());
@@ -236,23 +204,8 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(0, packageNode.getInterface().size());
         assertEquals(1, packageNode.getClazz().size());
 
+        assertStructureEquals(Class3.class, classNode);
         assertEquals("Class3", classNode.getComment());
-        assertEquals(1, classNode.getConstructor().size());
-        assertEquals(Class3.class.getSimpleName(), classNode.getName());
-        assertEquals(Class3.class.getName(), classNode.getQualified());
-        assertEquals("public", classNode.getScope());
-        assertEquals(1, classNode.getMethod().size());
-        assertEquals(0, classNode.getField().size());
-        assertEquals(0, classNode.getAnnotation().size());
-        assertEquals(0, classNode.getInterface().size());
-        assertEquals(Object.class.getName(), classNode.getClazz().getQualified());
-        assertFalse(classNode.isAbstract());
-        assertFalse(classNode.isExternalizable());
-        assertTrue(classNode.isIncluded());
-        assertFalse(classNode.isSerializable());
-        assertFalse(classNode.isException());
-        assertFalse(classNode.isError());
-        assertEquals(0, classNode.getGeneric().size());
 
         assertEquals("method1", method.getComment());
         assertEquals("method1", method.getName());
@@ -295,23 +248,8 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(0, packageNode.getInterface().size());
         assertEquals(1, packageNode.getClazz().size());
 
+        assertStructureEquals(Class4.class, classNode);
         assertEquals("Class4", classNode.getComment());
-        assertEquals(1, classNode.getConstructor().size());
-        assertEquals(Class4.class.getSimpleName(), classNode.getName());
-        assertEquals(Class4.class.getName(), classNode.getQualified());
-        assertEquals("public", classNode.getScope());
-        assertEquals(1, classNode.getField().size());
-        assertEquals(0, classNode.getMethod().size());
-        assertEquals(0, classNode.getAnnotation().size());
-        assertEquals(0, classNode.getInterface().size());
-        assertEquals(Object.class.getName(), classNode.getClazz().getQualified());
-        assertFalse(classNode.isAbstract());
-        assertFalse(classNode.isExternalizable());
-        assertTrue(classNode.isIncluded());
-        assertFalse(classNode.isSerializable());
-        assertFalse(classNode.isException());
-        assertFalse(classNode.isError());
-        assertEquals(0, classNode.getGeneric().size());
 
         // test field
         assertEquals("field1", field.getComment());
@@ -350,23 +288,8 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(0, packageNode.getInterface().size());
         assertEquals(2, packageNode.getClazz().size());
 
+        assertStructureEquals(Class5.class, classNode);
         assertEquals("Class5", classNode.getComment());
-        assertEquals(1, classNode.getConstructor().size());
-        assertEquals(Class5.class.getSimpleName(), classNode.getName());
-        assertEquals(Class5.class.getName(), classNode.getQualified());
-        assertEquals("public", classNode.getScope());
-        assertEquals(0, classNode.getMethod().size());
-        assertEquals(0, classNode.getField().size());
-        assertEquals(0, classNode.getAnnotation().size());
-        assertEquals(0, classNode.getInterface().size());
-        assertEquals(getSimpledataPackage() + ".Class3", classNode.getClazz().getQualified());
-        assertFalse(classNode.isAbstract());
-        assertFalse(classNode.isExternalizable());
-        assertTrue(classNode.isIncluded());
-        assertFalse(classNode.isSerializable());
-        assertFalse(classNode.isException());
-        assertFalse(classNode.isError());
-        assertEquals(0, classNode.getGeneric().size());
     }
 
     /**
@@ -389,26 +312,8 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(0, packageNode.getInterface().size());
         assertEquals(1, packageNode.getClazz().size());
 
+        assertStructureEquals(Class6.class, classNode);
         assertEquals("Class6", classNode.getComment());
-        assertEquals(1, classNode.getConstructor().size());
-        assertEquals(Class6.class.getSimpleName(), classNode.getName());
-        assertEquals(Class6.class.getName(), classNode.getQualified());
-        assertEquals("public", classNode.getScope());
-        assertEquals(0, classNode.getMethod().size());
-        assertEquals(0, classNode.getField().size());
-        assertEquals(1, classNode.getAnnotation().size());
-        assertEquals(1, classNode.getInterface().size());
-        assertEquals(Object.class.getName(), classNode.getClazz().getQualified());
-        assertFalse(classNode.isAbstract());
-        assertFalse(classNode.isExternalizable());
-        assertTrue(classNode.isIncluded());
-        assertFalse(classNode.isException());
-        assertFalse(classNode.isError());
-        assertEquals(0, classNode.getGeneric().size());
-
-        // the particular interface chosen for this test also will change this
-        // flag to true!
-        assertTrue(classNode.isSerializable());
 
         // verify interface
         assertEquals(java.io.Serializable.class.getName(), interfaceNode.getQualified());
@@ -434,23 +339,8 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(0, packageNode.getInterface().size());
         assertEquals(1, packageNode.getClazz().size());
 
+        assertStructureEquals(Class7.class, classNode);
         assertEquals("Class7", classNode.getComment());
-        assertEquals(1, classNode.getConstructor().size());
-        assertEquals(Class7.class.getSimpleName(), classNode.getName());
-        assertEquals(Class7.class.getName(), classNode.getQualified());
-        assertEquals("public", classNode.getScope());
-        assertEquals(0, classNode.getMethod().size());
-        assertEquals(0, classNode.getField().size());
-        assertEquals(1, classNode.getAnnotation().size());
-        assertEquals(0, classNode.getInterface().size());
-        assertEquals(Object.class.getName(), classNode.getClazz().getQualified());
-        assertFalse(classNode.isAbstract());
-        assertFalse(classNode.isExternalizable());
-        assertTrue(classNode.isIncluded());
-        assertFalse(classNode.isSerializable());
-        assertFalse(classNode.isException());
-        assertFalse(classNode.isError());
-        assertEquals(0, classNode.getGeneric().size());
 
         // test annotation 'deprecated' on class
         assertEquals("java.lang.Deprecated", annotationNode.getQualified());
@@ -477,23 +367,8 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(0, packageNode.getInterface().size());
         assertEquals(1, packageNode.getClazz().size());
 
+        assertStructureEquals(Class8.class, classNode);
         assertEquals("Class8", classNode.getComment());
-        assertEquals(1, classNode.getConstructor().size());
-        assertEquals(Class8.class.getSimpleName(), classNode.getName());
-        assertEquals(Class8.class.getName(), classNode.getQualified());
-        assertEquals("public", classNode.getScope());
-        assertEquals(0, classNode.getMethod().size());
-        assertEquals(0, classNode.getField().size());
-        assertEquals(0, classNode.getAnnotation().size());
-        assertEquals(0, classNode.getInterface().size());
-        assertEquals(Object.class.getName(), classNode.getClazz().getQualified());
-        assertTrue(classNode.isAbstract());
-        assertFalse(classNode.isExternalizable());
-        assertTrue(classNode.isIncluded());
-        assertFalse(classNode.isSerializable());
-        assertFalse(classNode.isException());
-        assertFalse(classNode.isError());
-        assertEquals(0, classNode.getGeneric().size());
     }
 
     /**
@@ -515,30 +390,15 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(0, packageNode.getInterface().size());
         assertEquals(1, packageNode.getClazz().size());
 
+        assertStructureEquals(Class9.class, classNode);
         assertEquals("Class9", classNode.getComment());
-        assertEquals(1, classNode.getConstructor().size());
-        assertEquals(Class9.class.getSimpleName(), classNode.getName());
-        assertEquals(Class9.class.getName(), classNode.getQualified());
-        assertEquals("public", classNode.getScope());
-        assertEquals(2, classNode.getMethod().size());
-        assertEquals(0, classNode.getField().size());
-        assertEquals(0, classNode.getAnnotation().size());
-        assertEquals(1, classNode.getInterface().size());
-        assertEquals(Object.class.getName(), classNode.getClazz().getQualified());
-        assertFalse(classNode.isAbstract());
-        assertTrue(classNode.isExternalizable());
-        assertTrue(classNode.isIncluded());
-        assertTrue(classNode.isSerializable());
-        assertFalse(classNode.isException());
-        assertFalse(classNode.isError());
-        assertEquals(0, classNode.getGeneric().size());
     }
 
     /**
      * testing difference of scope modifier on class
      */
     @Test
-    public void testClass10() {
+    public void testClass10() throws ClassNotFoundException {
         String[] sourceFiles = new String[] {getSourceFile("Class10")};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
@@ -553,30 +413,15 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(0, packageNode.getInterface().size());
         assertEquals(1, packageNode.getClazz().size());
 
+        assertStructureEquals(java.lang.Class.forName(getSimpledataPackage() + ".Class10"), classNode);
         assertEquals("Class10", classNode.getComment());
-        assertEquals(1, classNode.getConstructor().size());
-        assertEquals("Class10", classNode.getName());
-        assertEquals(getSimpledataPackage() + ".Class10", classNode.getQualified());
-        assertEquals("", classNode.getScope());
-        assertEquals(0, classNode.getMethod().size());
-        assertEquals(0, classNode.getField().size());
-        assertEquals(0, classNode.getAnnotation().size());
-        assertEquals(0, classNode.getInterface().size());
-        assertEquals(Object.class.getName(), classNode.getClazz().getQualified());
-        assertFalse(classNode.isAbstract());
-        assertFalse(classNode.isExternalizable());
-        assertTrue(classNode.isIncluded());
-        assertFalse(classNode.isSerializable());
-        assertFalse(classNode.isException());
-        assertFalse(classNode.isError());
-        assertEquals(0, classNode.getGeneric().size());
     }
 
     /**
      * testing if isException is populated correctly
      */
     @Test
-    public void testClass11() {
+    public void testClass11() throws ClassNotFoundException {
         String[] sourceFiles = new String[] {getSourceFile("Class11")};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
@@ -591,30 +436,15 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(0, packageNode.getInterface().size());
         assertEquals(1, packageNode.getClazz().size());
 
+        assertStructureEquals(java.lang.Class.forName(getSimpledataPackage() + ".Class11"), classNode);
         assertEquals("Class11", classNode.getComment());
-        assertEquals(1, classNode.getConstructor().size());
-        assertEquals("Class11", classNode.getName());
-        assertEquals(getSimpledataPackage() + ".Class11", classNode.getQualified());
-        assertEquals("public", classNode.getScope());
-        assertEquals(0, classNode.getMethod().size());
-        assertEquals(0, classNode.getField().size());
-        assertEquals(1, classNode.getAnnotation().size());
-        assertEquals(0, classNode.getInterface().size());
-        assertEquals(Exception.class.getName(), classNode.getClazz().getQualified());
-        assertFalse(classNode.isAbstract());
-        assertFalse(classNode.isExternalizable());
-        assertTrue(classNode.isIncluded());
-        assertTrue(classNode.isSerializable());
-        assertTrue(classNode.isException());
-        assertFalse(classNode.isError());
-        assertEquals(0, classNode.getGeneric().size());
     }
 
     /**
      * testing if isError is populated correctly
      */
     @Test
-    public void testClass12() {
+    public void testClass12() throws ClassNotFoundException {
         String[] sourceFiles = new String[] {getSourceFile("Class12")};
         Root rootNode = executeJavadoc(null, null, null, sourceFiles, null, new String[] {"-dryrun"});
 
@@ -629,23 +459,8 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(0, packageNode.getInterface().size());
         assertEquals(1, packageNode.getClazz().size());
 
+        assertStructureEquals(java.lang.Class.forName(getSimpledataPackage() + ".Class12"), classNode);
         assertEquals("Class12", classNode.getComment());
-        assertEquals(1, classNode.getConstructor().size());
-        assertEquals("Class12", classNode.getName());
-        assertEquals(getSimpledataPackage() + ".Class12", classNode.getQualified());
-        assertEquals("public", classNode.getScope());
-        assertEquals(0, classNode.getMethod().size());
-        assertEquals(0, classNode.getField().size());
-        assertEquals(1, classNode.getAnnotation().size());
-        assertEquals(0, classNode.getInterface().size());
-        assertEquals(Error.class.getName(), classNode.getClazz().getQualified());
-        assertFalse(classNode.isAbstract());
-        assertFalse(classNode.isExternalizable());
-        assertTrue(classNode.isIncluded());
-        assertTrue(classNode.isSerializable());
-        assertFalse(classNode.isException());
-        assertTrue(classNode.isError());
-        assertEquals(0, classNode.getGeneric().size());
     }
 
     /**
@@ -668,23 +483,8 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(0, packageNode.getInterface().size());
         assertEquals(1, packageNode.getClazz().size());
 
+        assertStructureEquals(Class13.class, classNode);
         assertEquals("Class13", classNode.getComment());
-        assertEquals(1, classNode.getConstructor().size());
-        assertEquals("Class13", classNode.getName());
-        assertEquals(getSimpledataPackage() + ".Class13", classNode.getQualified());
-        assertEquals("public", classNode.getScope());
-        assertEquals(1, classNode.getGeneric().size());
-        assertEquals(0, classNode.getMethod().size());
-        assertEquals(0, classNode.getField().size());
-        assertEquals(0, classNode.getAnnotation().size());
-        assertEquals(0, classNode.getInterface().size());
-        assertEquals(Object.class.getName(), classNode.getClazz().getQualified());
-        assertFalse(classNode.isAbstract());
-        assertFalse(classNode.isExternalizable());
-        assertTrue(classNode.isIncluded());
-        assertFalse(classNode.isSerializable());
-        assertFalse(classNode.isException());
-        assertFalse(classNode.isError());
 
         // check the 'fun' type var
         assertEquals("Fun", typeParameter.getName());
@@ -711,23 +511,8 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(0, packageNode.getInterface().size());
         assertEquals(1, packageNode.getClazz().size());
 
+        assertStructureEquals(Class14.class, classNode);
         assertEquals("Class14", classNode.getComment());
-        assertEquals(1, classNode.getConstructor().size());
-        assertEquals("Class14", classNode.getName());
-        assertEquals(getSimpledataPackage() + ".Class14", classNode.getQualified());
-        assertEquals("public", classNode.getScope());
-        assertEquals(1, classNode.getGeneric().size());
-        assertEquals(0, classNode.getMethod().size());
-        assertEquals(0, classNode.getField().size());
-        assertEquals(0, classNode.getAnnotation().size());
-        assertEquals(0, classNode.getInterface().size());
-        assertEquals(Object.class.getName(), classNode.getClazz().getQualified());
-        assertFalse(classNode.isAbstract());
-        assertFalse(classNode.isExternalizable());
-        assertTrue(classNode.isIncluded());
-        assertFalse(classNode.isSerializable());
-        assertFalse(classNode.isException());
-        assertFalse(classNode.isError());
 
         // check the 'fun' type var
 
@@ -756,23 +541,8 @@ public class ClassTest extends AbstractTestParent {
         assertEquals(0, packageNode.getInterface().size());
         assertEquals(1, packageNode.getClazz().size());
 
+        assertStructureEquals(Class15.class, classNode);
         assertEquals("Class15", classNode.getComment());
-        assertEquals(1, classNode.getConstructor().size());
-        assertEquals("Class15", classNode.getName());
-        assertEquals(getSimpledataPackage() + ".Class15", classNode.getQualified());
-        assertEquals("public", classNode.getScope());
-        assertEquals(1, classNode.getGeneric().size());
-        assertEquals(0, classNode.getMethod().size());
-        assertEquals(0, classNode.getField().size());
-        assertEquals(0, classNode.getAnnotation().size());
-        assertEquals(0, classNode.getInterface().size());
-        assertEquals(Object.class.getName(), classNode.getClazz().getQualified());
-        assertFalse(classNode.isAbstract());
-        assertFalse(classNode.isExternalizable());
-        assertTrue(classNode.isIncluded());
-        assertFalse(classNode.isSerializable());
-        assertFalse(classNode.isException());
-        assertFalse(classNode.isError());
 
         // check the 'fun' type var
         assertEquals("Fun", typeParameter.getName());
@@ -793,6 +563,7 @@ public class ClassTest extends AbstractTestParent {
 
         Package packageNode = rootNode.getPackage().get(0);
         Class classNode = packageNode.getClazz().get(0);
+        assertStructureEquals(Class16.class, classNode);
         AnnotationInstance instance = classNode.getAnnotation().get(0);
         AnnotationArgument argument = instance.getArgument().get(0);
         assertEquals("id", argument.getName());
@@ -815,6 +586,7 @@ public class ClassTest extends AbstractTestParent {
 
         Package packageNode = rootNode.getPackage().get(0);
         Class classNode = packageNode.getClazz().get(0);
+        assertStructureEquals(Class17.class, classNode);
         AnnotationInstance instance = classNode.getAnnotation().get(0);
         AnnotationArgument argument = instance.getArgument().get(0);
         assertEquals("int", argument.getType().getQualified());
@@ -837,6 +609,7 @@ public class ClassTest extends AbstractTestParent {
 
         Package packageNode = rootNode.getPackage().get(0);
         Class classNode = packageNode.getClazz().get(0);
+        assertStructureEquals(Class18.class, classNode);
         AnnotationInstance instance = classNode.getAnnotation().get(0);
         AnnotationArgument argument = instance.getArgument().get(0);
         assertEquals("java.lang.String", argument.getType().getQualified());
@@ -859,6 +632,7 @@ public class ClassTest extends AbstractTestParent {
 
         Package packageNode = rootNode.getPackage().get(0);
         Class classNode = packageNode.getClazz().get(0);
+        assertStructureEquals(Class19.class, classNode);
         AnnotationInstance instance = classNode.getAnnotation().get(0);
         AnnotationArgument argument = instance.getArgument().get(0);
         assertEquals(getSimpledataPackage() + ".Enum1", argument.getType().getQualified());
@@ -880,6 +654,7 @@ public class ClassTest extends AbstractTestParent {
 
         Package packageNode = rootNode.getPackage().get(0);
         Class classNode = packageNode.getClazz().get(0);
+        assertStructureEquals(Class20.class, classNode);
         AnnotationInstance instance = classNode.getAnnotation().get(0);
         AnnotationArgument argument = instance.getArgument().get(0);
         assertEquals("java.lang.Class", argument.getType().getQualified());
@@ -901,6 +676,7 @@ public class ClassTest extends AbstractTestParent {
 
         Package packageNode = rootNode.getPackage().get(0);
         Class classNode = packageNode.getClazz().get(0);
+        assertStructureEquals(Class21.class, classNode);
         AnnotationInstance instance = classNode.getAnnotation().get(0);
         AnnotationArgument argument = instance.getArgument().get(0);
         assertEquals("char", argument.getType().getQualified());
@@ -922,6 +698,7 @@ public class ClassTest extends AbstractTestParent {
 
         Package packageNode = rootNode.getPackage().get(0);
         Class classNode = packageNode.getClazz().get(0);
+        assertStructureEquals(Class22.class, classNode);
         AnnotationInstance instance = classNode.getAnnotation().get(0);
         AnnotationArgument argument = instance.getArgument().get(0);
         assertEquals("char", argument.getType().getQualified());
@@ -943,6 +720,7 @@ public class ClassTest extends AbstractTestParent {
 
         Package packageNode = rootNode.getPackage().get(0);
         Class classNode = packageNode.getClazz().get(0);
+        assertStructureEquals(Class23.class, classNode);
         AnnotationInstance instance = classNode.getAnnotation().get(0);
         AnnotationArgument argument = instance.getArgument().get(0);
         assertEquals("boolean", argument.getType().getQualified());
@@ -964,6 +742,7 @@ public class ClassTest extends AbstractTestParent {
 
         Package packageNode = rootNode.getPackage().get(0);
         Class classNode = packageNode.getClazz().get(0);
+        assertStructureEquals(Class24.class, classNode);
         AnnotationInstance instance = classNode.getAnnotation().get(0);
         AnnotationArgument argument = instance.getArgument().get(0);
         assertEquals("int", argument.getType().getQualified());
