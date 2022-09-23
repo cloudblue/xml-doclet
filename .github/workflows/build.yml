@@ -59,9 +59,12 @@ jobs:
         run: mvn -B install --file pom.xml
 
       - name: Publish test coverage results
-        uses: PavanMudigonda/jacoco-reporter@v4.5
+        uses: PavanMudigonda/jacoco-reporter@4.6
         with:
-          coverage_results_path: 'target/site/jacoco/jacoco.xml'
+          coverage_results_path: 'jacoco-report/test.xml'
           coverage_report_title: 'Test coverage results'
           coverage_report_name: 'Test coverage results'
+          minimum_coverage: 80
+          fail_below_threshold: true
+          publish_only_summary: false
           github_token: ${{ secrets.GITHUB_TOKEN }}
