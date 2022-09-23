@@ -69,7 +69,7 @@ public class HelloWorld {
     /**
      * Greets all worlds.
      *
-     * @param worlds list of words to greet
+     * @param worlds list of worlds to greet
      * @return       a greeting to everyone!
      */
     public String hello(List<String> worlds) {
@@ -90,7 +90,7 @@ The doclet will generate the following XML document:
       <constructor name="AnnotatedParameter" signature="()" qualified="com.example.HelloWorld" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
       <method name="hello" signature="(java.util.List&lt;java.lang.String&gt;)" qualified="com.example.HelloWorld.hello" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
         <comment>Greets all worlds.</comment>
-        <tag name="@param" text="worlds list of words to greet"/>
+        <tag name="@param" text="worlds list of worlds to greet"/>
         <tag name="@return" text="a greeting to everyone!"/>
         <parameter name="worlds">
           <type qualified="java.util.List">
