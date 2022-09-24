@@ -28,8 +28,7 @@ public class ReflectionSupport {
         assertEquals(clazz.getSuperclass().getName(), xmlClazz.getClazz().getQualified(), "Superclass");
         assertEquals(clazz.getInterfaces().length, xmlClazz.getInterface().size(), "Interfaces");
         assertEquals(clazz.getTypeParameters().length, xmlClazz.getGeneric().size(), "Generics");
-	    long countWithoutSyntheticMethods = Arrays.stream(clazz.getDeclaredMethods()).filter(Predicate.not(Method::isSynthetic)).count();
-	    assertEquals(countWithoutSyntheticMethods, xmlClazz.getMethod().size(), "Methods");
+        assertEquals(countClassMethodsFilteringSynthetic(clazz), xmlClazz.getMethod().size(), "Methods");
         assertEquals(clazz.getDeclaredFields().length, xmlClazz.getField().size(), "Fields");
         assertEquals(Externalizable.class.isAssignableFrom(clazz), xmlClazz.isExternalizable(), "Externalizable");
         assertEquals(Serializable.class.isAssignableFrom(clazz), xmlClazz.isSerializable(), "Serializable");
@@ -43,5 +42,15 @@ public class ReflectionSupport {
         if (Modifier.isProtected(mod)) return "protected";
         if (Modifier.isPrivate(mod)) return "private";
         return "";
+    }
+
+    /**
+     * Required due to Jacoco synthetic classes (<a href="https://www.jacoco.org/jacoco/trunk/doc/faq.html">...</a>)
+     *
+     * @param clazz
+     * @return
+     */
+    private static long countClassMethodsFilteringSynthetic(final java.lang.Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredMethods()).filter(Predicate.not(Method::isSynthetic)).count();
     }
 }
