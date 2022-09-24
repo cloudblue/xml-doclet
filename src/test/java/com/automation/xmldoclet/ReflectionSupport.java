@@ -4,7 +4,10 @@ import com.automation.xmldoclet.xjc.Class;
 
 import java.io.Externalizable;
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,7 +28,8 @@ public class ReflectionSupport {
         assertEquals(clazz.getSuperclass().getName(), xmlClazz.getClazz().getQualified(), "Superclass");
         assertEquals(clazz.getInterfaces().length, xmlClazz.getInterface().size(), "Interfaces");
         assertEquals(clazz.getTypeParameters().length, xmlClazz.getGeneric().size(), "Generics");
-        assertEquals(clazz.getDeclaredMethods().length, xmlClazz.getMethod().size(), "Methods");
+	    long countWithoutSyntheticMethods = Arrays.stream(clazz.getDeclaredMethods()).filter(Predicate.not(Method::isSynthetic)).count();
+	    assertEquals(countWithoutSyntheticMethods, xmlClazz.getMethod().size(), "Methods");
         assertEquals(clazz.getDeclaredFields().length, xmlClazz.getField().size(), "Fields");
         assertEquals(Externalizable.class.isAssignableFrom(clazz), xmlClazz.isExternalizable(), "Externalizable");
         assertEquals(Serializable.class.isAssignableFrom(clazz), xmlClazz.isSerializable(), "Serializable");
