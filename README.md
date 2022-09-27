@@ -1,7 +1,8 @@
 xml-doclet
 =================================
 
-This library provides a doclet to output the javadoc comments from Java source code to a XML document.
+This library provides a doclet to output the javadoc comments from Java source code to an XML document.  
+Works with Java 11 and above, supporting up to Java 17 (handling Records and Sealed classes as normal classes).  
 
 Usage
 -----
