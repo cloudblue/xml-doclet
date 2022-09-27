@@ -8,13 +8,3 @@ package com.automation.xmldoclet.simpledata;
  */
 public record RecordClass(int x, int y) {
 }
-
-//public abstract sealed class Person permits Employee, Manager {
-//
-//}
-//
-//public final class Employee extends Person {
-//}
-//
-//public non-sealed class Manager extends Person {
-//}
