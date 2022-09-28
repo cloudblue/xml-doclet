@@ -130,7 +130,7 @@ public class Parser {
         } else if (typeElement.getKind() == ElementKind.INTERFACE) {
             transformInterfaceType(typeElement);
 
-        } else if (typeElement.getKind() == ElementKind.CLASS) {
+        } else if (typeElement.getKind() == ElementKind.CLASS || typeElement.getKind().toString().equals("RECORD")) {
             transformClassType(typeElement);
 
         } else {

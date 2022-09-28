@@ -1,7 +1,8 @@
 xml-doclet
 =================================
 
-This library provides a doclet to output the javadoc comments from Java source code to a XML document.
+This library provides a doclet to output the javadoc comments from Java source code to an XML document.  
+Works with Java 11 and above, supporting up to Java 17 (handling Records and Sealed classes as normal classes).  
 
 [![Build Status](https://github.com/cloudblue/xml-doclet/workflows/Build%20XmlDoclet/badge.svg)](https://github.com/cloudblue/xml-doclet/actions)
 
@@ -71,7 +72,7 @@ public class HelloWorld {
     /**
      * Greets all worlds.
      *
-     * @param worlds list of words to greet
+     * @param worlds list of worlds to greet
      * @return       a greeting to everyone!
      */
     public String hello(List<String> worlds) {
@@ -92,7 +93,7 @@ The doclet will generate the following XML document:
       <constructor name="AnnotatedParameter" signature="()" qualified="com.example.HelloWorld" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
       <method name="hello" signature="(java.util.List&lt;java.lang.String&gt;)" qualified="com.example.HelloWorld.hello" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
         <comment>Greets all worlds.</comment>
-        <tag name="@param" text="worlds list of words to greet"/>
+        <tag name="@param" text="worlds list of worlds to greet"/>
         <tag name="@return" text="a greeting to everyone!"/>
         <parameter name="worlds">
           <type qualified="java.util.List">
