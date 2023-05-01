@@ -14,6 +14,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
+        <jaxb.api.version>2.3.3</jaxb.api.version>
         <jaxb.version>2.3.6</jaxb.version>
         <activation.version>1.2.2</activation.version>
         <junit.jupiter.version>5.9.0</junit.jupiter.version>
@@ -41,9 +42,15 @@
 
     <dependencies>
         <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>${jaxb.api.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
             <version>${jaxb.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <!-- JAXB needs javax.activation module (jdk9) -->
         <dependency>
@@ -118,20 +125,10 @@
                     <extension>true</extension>
                     <generatePackage>com.automation.xmldoclet.xjc</generatePackage>
                     <schemaDirectory>src/main/xjc</schemaDirectory>
+                    <bindingIncludes>
+                            <include>**/*.xb</include>
+                    </bindingIncludes>
                     <strict>false</strict>
-                </configuration>
-            </plugin>
-            <plugin>
-                <!-- Set java version target, use project source encoding -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <release>${java.version}</release>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <optimize>true</optimize>
                 </configuration>
             </plugin>
         </plugins>

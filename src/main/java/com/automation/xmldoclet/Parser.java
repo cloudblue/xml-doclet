@@ -170,7 +170,15 @@ public class Parser {
                 xmlClass.getMethod().add(transformMethodElement(methodElement));
             }
         }
+
         getXmlPackage(typeElement).getClazz().add(xmlClass);
+
+        for (Element enclosedElement : typeElement.getEnclosedElements()) {
+            if (enclosedElement.getKind().isClass() || enclosedElement.getKind().isInterface() ) {
+                final TypeElement enclosedTypeElement = (TypeElement) enclosedElement;
+                transformTypeElement(enclosedTypeElement);
+            }
+        }
     }
 
     private void transformInterfaceType(TypeElement typeElement) {
@@ -193,6 +201,11 @@ public class Parser {
             if (enclosedElement.getKind() == ElementKind.METHOD) {
                 final ExecutableElement methodElement = (ExecutableElement) enclosedElement;
                 xmlInterface.getMethod().add(transformMethodElement(methodElement));
+            } else if (enclosedElement.getKind() == ElementKind.CLASS ||
+                    enclosedElement.getKind() == ElementKind.ANNOTATION_TYPE ||
+                    enclosedElement.getKind() == ElementKind.INTERFACE ) {
+                final TypeElement enclosedTypeElement = (TypeElement) enclosedElement;
+                transformTypeElement(enclosedTypeElement);
             }
         }
         getXmlPackage(typeElement).getInterface().add(xmlInterface);
